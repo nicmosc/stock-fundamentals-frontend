@@ -1,7 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint/eslint-plugin', 'eslint-plugin-react'],
-  extends: ['eslint:recommended', 'plugin:react/recommended'],
+  extends: ['react-app','eslint:recommended', 'plugin:react/recommended'],
   env: {
     node: true,
     commonjs: true,
@@ -51,5 +51,7 @@ module.exports = {
     'react/no-unescaped-entities': ['off'],
     'react/style-prop-object': ['warn'],
     'react/display-name': ['off'],
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off'
   },
 };
