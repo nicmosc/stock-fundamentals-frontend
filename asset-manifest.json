@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.js": "/stock-fundamentals-frontend/static/js/main.dcf84b2d.chunk.js",
+    "main.js.map": "/stock-fundamentals-frontend/static/js/main.dcf84b2d.chunk.js.map",
+    "runtime-main.js": "/stock-fundamentals-frontend/static/js/runtime-main.3556c72e.js",
+    "runtime-main.js.map": "/stock-fundamentals-frontend/static/js/runtime-main.3556c72e.js.map",
+    "static/js/2.5b1d3af2.chunk.js": "/stock-fundamentals-frontend/static/js/2.5b1d3af2.chunk.js",
+    "static/js/2.5b1d3af2.chunk.js.map": "/stock-fundamentals-frontend/static/js/2.5b1d3af2.chunk.js.map",
+    "index.html": "/stock-fundamentals-frontend/index.html",
+    "static/js/2.5b1d3af2.chunk.js.LICENSE.txt": "/stock-fundamentals-frontend/static/js/2.5b1d3af2.chunk.js.LICENSE.txt",
+    "static/media/logo.6ce24c58.svg": "/stock-fundamentals-frontend/static/media/logo.6ce24c58.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3556c72e.js",
+    "static/js/2.5b1d3af2.chunk.js",
+    "static/js/main.dcf84b2d.chunk.js"
+  ]
+}
