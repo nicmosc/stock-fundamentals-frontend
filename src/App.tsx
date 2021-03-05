@@ -1,49 +1,41 @@
-import { css } from '@emotion/css';
+import { grey } from '@ant-design/colors';
+import { Layout, Space, Table, Typography } from 'antd';
 
-import logo from './logo.svg';
-
-const styles = {
-  app: css`
-    text-align: center;
-  `,
-  logo: css`
-    height: 40vmin;
-    pointer-events: none;
-  `,
-  header: css`
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-  `,
-  link: css`
-    color: #61dafb;
-  `,
-};
-
-function App() {
+export const App = () => {
+  const stockData: Array<{}> = [];
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <img src={logo} className={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reloader
-        </p>
-        <a
-          className={styles.link}
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Layout style={{ height: '100vh' }}>
+      <Layout.Header>
+        <Space align="center" style={{ height: '100%' }}>
+          <Typography.Title level={2} style={{ color: grey[0], marginBottom: 0 }}>
+            The Stock depot
+          </Typography.Title>
+        </Space>
+      </Layout.Header>
+      <Layout.Content>
+        <div style={{ height: '100%', margin: 20 }}>
+          <Table
+            dataSource={stockData}
+            columns={[
+              {
+                title: 'Name',
+                dataIndex: 'name',
+                key: 'name',
+              },
+              {
+                title: 'Price',
+                dataIndex: 'price',
+                key: 'price',
+              },
+              {
+                title: 'Discount',
+                dataIndex: 'discount',
+                key: 'discount',
+              },
+            ]}
+          />
+        </div>
+      </Layout.Content>
+    </Layout>
   );
-}
-
-export default App;
+};
