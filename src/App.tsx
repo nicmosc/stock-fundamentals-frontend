@@ -52,10 +52,10 @@ export const App = () => {
                     href={`https://finance.yahoo.com/quote/${stock.symbol}`}
                     target="_blank"
                   >
-                    {stock.name}
+                    {stock.name} ({stock.symbol})
                   </Typography.Link>
                 ),
-                ticker: stock.symbol,
+                sector: stock.profile.sector,
                 price: `$${stock.stats.currentPrice}`,
                 fair: `$${stock.fairPrice}`,
                 discount: String(
@@ -68,15 +68,15 @@ export const App = () => {
                   dataIndex: 'name',
                 },
                 {
-                  title: 'Ticker',
-                  dataIndex: 'ticker',
+                  title: 'Sector',
+                  dataIndex: 'sector',
                 },
                 {
-                  title: 'Price',
+                  title: 'Current Price',
                   dataIndex: 'price',
                 },
                 {
-                  title: 'Fair',
+                  title: 'Est. Fair Price',
                   dataIndex: 'fair',
                 },
                 {
