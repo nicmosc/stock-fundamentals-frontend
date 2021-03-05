@@ -1,5 +1,5 @@
-import { grey } from '@ant-design/colors';
-import { Layout, Space, Spin, Table, Typography } from 'antd';
+import { green, grey, red } from '@ant-design/colors';
+import { Layout, Space, Spin, Table, Tag, Typography } from 'antd';
 
 import { computeRankScores, useFetchStocks } from './utils';
 
@@ -24,28 +24,37 @@ export const App = () => {
                 name: stock.name,
                 ticker: stock.symbol,
                 price: stock.stats.currentPrice,
-                fair: `${stock.fairPrice} (${stock.discountScore})`,
+                fair: stock.fairPrice,
+                discount: String(
+                  Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100),
+                ),
               }))}
               columns={[
                 {
                   title: 'Name',
                   dataIndex: 'name',
-                  key: 'name',
                 },
                 {
                   title: 'Ticker',
                   dataIndex: 'ticker',
-                  key: 'ticker',
                 },
                 {
                   title: 'Price',
                   dataIndex: 'price',
-                  key: 'price',
                 },
                 {
                   title: 'Fair',
                   dataIndex: 'fair',
-                  key: 'fair',
+                },
+                {
+                  title: 'Discount',
+                  dataIndex: 'discount',
+                  render: (discount) =>
+                    discount <= 0 ? (
+                      <Tag color={red.primary}>No discount</Tag>
+                    ) : (
+                      <Tag color={green.primary}>{`-${discount}%`}</Tag>
+                    ),
                 },
               ]}
             />
