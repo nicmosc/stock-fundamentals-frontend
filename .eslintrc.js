@@ -44,7 +44,7 @@ module.exports = {
     'no-useless-constructor': ['off'],
     '@typescript-eslint/no-useless-constructor': ['warn'],
     'no-empty-pattern': ['off'],
-    "@typescript-eslint/no-use-before-define": ["warn"]
+    "@typescript-eslint/no-use-before-define": ["warn"],
 
     // React
     'react/prop-types': ['off'],
