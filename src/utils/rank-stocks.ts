@@ -1,17 +1,12 @@
 import { Stock, StockFromServer } from '../types';
-
-function round(value: number): number {
-  return Math.round((value + Number.EPSILON) * 100) / 100;
-}
+import { round } from './round';
 
 function filterExtremeStats(stocks: Array<StockFromServer>): Array<StockFromServer> {
   return stocks.filter((stock) => stock.stats.growthRate > 0.1 && stock.stats.growthRate < 1);
 }
 
 function filterExtremeScores(stocks: Array<Stock>): Array<Stock> {
-  return stocks.filter(
-    (stock) => stock.fairPrice > 0 && stock.discountScore > 0.1 && stock.discountScore < 1.1,
-  );
+  return stocks.filter((stock) => stock.fairPrice > 0 && stock.discountScore < 1.1);
 }
 
 function computeFairPrice(

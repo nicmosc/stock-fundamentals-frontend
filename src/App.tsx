@@ -1,12 +1,18 @@
 import { green, grey, red } from '@ant-design/colors';
-import { Layout, Space, Spin, Table, Tag, Typography } from 'antd';
+import { Layout, PageHeader, Slider, Space, Spin, Table, Tag, Typography } from 'antd';
+import { useState } from 'react';
 
 import { computeRankScores, useFetchStocks } from './utils';
 
 export const App = () => {
   const { isLoading, stocks = [] } = useFetchStocks();
-  const computedStocks = computeRankScores(0.2, 0.5, stocks);
-  const sortedStocks = [...computedStocks].sort((a, b) => a.discountScore - b.discountScore);
+  const [margin, setMargin] = useState<number>(50);
+  const [roi, setRoi] = useState<number>(20);
+
+  const safety = 1 - margin / 100;
+
+  const computedStocks = computeRankScores(roi / 100, safety, stocks);
+  const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
   return (
     <Layout style={{ height: '100vh' }}>
       <Layout.Header>
@@ -18,13 +24,40 @@ export const App = () => {
       </Layout.Header>
       <Layout.Content>
         <div style={{ height: '100%', margin: 20 }}>
+          <PageHeader ghost={false}>
+            <div style={{ display: 'flex' }}>
+              <div>
+                <div>Margin of safety (%)</div>
+                <Space direction="vertical" size="large">
+                  <div style={{ width: 200 }}>
+                    <Slider value={margin} onChange={setMargin} />
+                  </div>
+                </Space>
+              </div>
+              <div>
+                <div>Desired rate of return (%)</div>
+                <Space direction="vertical" size="large">
+                  <div style={{ width: 200 }}>
+                    <Slider value={roi} onChange={setRoi} />
+                  </div>
+                </Space>
+              </div>
+            </div>
+          </PageHeader>
           <Spin spinning={isLoading}>
             <Table
               dataSource={sortedStocks.map((stock) => ({
-                name: stock.name,
+                name: (
+                  <Typography.Link
+                    href={`https://finance.yahoo.com/quote/${stock.symbol}`}
+                    target="_blank"
+                  >
+                    {stock.name}
+                  </Typography.Link>
+                ),
                 ticker: stock.symbol,
-                price: stock.stats.currentPrice,
-                fair: stock.fairPrice,
+                price: `$${stock.stats.currentPrice}`,
+                fair: `$${stock.fairPrice}`,
                 discount: String(
                   Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100),
                 ),
