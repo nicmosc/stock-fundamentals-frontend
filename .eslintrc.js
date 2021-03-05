@@ -52,6 +52,7 @@ module.exports = {
     'react/style-prop-object': ['warn'],
     'react/display-name': ['off'],
     'react/jsx-uses-react': 'off',
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    'react-hooks/exhaustive-deps': 'off',
   },
 };
