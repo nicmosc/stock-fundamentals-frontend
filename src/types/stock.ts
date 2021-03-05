@@ -1,4 +1,4 @@
-export interface Stock {
+export interface StockFromServer {
   symbol: string;
   name: string;
   profile: {
@@ -19,4 +19,10 @@ export interface Stock {
     est10thYearPrice: number;
     currentPrice: number;
   };
+}
+
+export interface Stock extends StockFromServer {
+  fairPrice: number;
+  discountScore: number;
+  fundamentalsScore: number;
 }

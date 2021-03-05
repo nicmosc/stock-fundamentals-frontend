@@ -1,10 +1,14 @@
 import urlJoin from 'url-join';
 
-import { Stock } from '../types';
+import { StockFromServer } from '../types';
 import { useFetchData } from './use-fetch-data';
 
-export function useFetchStocks(): { isLoading: boolean; stocks?: Array<Stock>; error: Error } {
-  const { isLoading, error, data } = useFetchData<Array<Stock>>(
+export function useFetchStocks(): {
+  isLoading: boolean;
+  stocks?: Array<StockFromServer>;
+  error: Error;
+} {
+  const { isLoading, error, data } = useFetchData<Array<StockFromServer>>(
     urlJoin(process.env.REACT_APP_API_HOST, 'api/stocks'),
   );
   return {
