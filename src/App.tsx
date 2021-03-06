@@ -92,6 +92,7 @@ export const App = () => {
               ]}
             />
           </Spin>
+          <Typography.Text>Prices updated daily</Typography.Text>
         </div>
       </Layout.Content>
     </Layout>

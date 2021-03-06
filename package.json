@@ -2,7 +2,7 @@
   "name": "stock-fundamentals-frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://nicmosc.github.io/stock-fundamentals-frontend",
+  "homepage": "https://www.thestocksdepot.com",
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
     "@emotion/css": "^11.1.3",
