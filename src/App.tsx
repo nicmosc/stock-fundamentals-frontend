@@ -2,6 +2,7 @@ import { green, grey, red } from '@ant-design/colors';
 import { Layout, PageHeader, Slider, Space, Spin, Table, Tag, Typography } from 'antd';
 import { useState } from 'react';
 
+// import { Stock } from './types';
 import { computeRankScores, useFetchStocks } from './utils';
 
 export const App = () => {
@@ -13,6 +14,14 @@ export const App = () => {
 
   const computedStocks = computeRankScores(roi / 100, safety, stocks);
   const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
+
+  // console.log(
+  //   sortedStocks.reduce(
+  //     (memo, s) => ({ ...memo, [s.profile.sector]: (memo[s.profile.sector] ?? 0) + 1 }),
+  //     {} as Record<Stock['profile']['sector'], number>,
+  //   ),
+  // );
+
   return (
     <Layout style={{ height: '100vh' }}>
       <Layout.Header>
