@@ -15,17 +15,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Build
+    - name: Deploy
       run: |
         npm install
-        REACT_APP_API_HOST=${{ secrets.REACT_APP_API_HOST }} npm run-script build
+        npm run deploy
+      with:
+        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
       env:
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
 
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
-        BRANCH: gh-pages
-        FOLDER: build
+    # - name: Deploy
+    #   uses: JamesIves/github-pages-deploy-action@releases/v3
+    #   with:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+    #     BRANCH: gh-pages
+    #     FOLDER: build
