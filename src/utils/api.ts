@@ -8,6 +8,7 @@ export function useFetchStocks(): {
   stocks?: Array<StockFromServer>;
   error: Error;
 } {
+  console.error('API Host ', process.env.REACT_APP_API_HOST);
   const { isLoading, error, data } = useFetchData<Array<StockFromServer>>(
     urlJoin(process.env.REACT_APP_API_HOST, 'api/stocks'),
   );
