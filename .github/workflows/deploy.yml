@@ -23,6 +23,7 @@ jobs:
       env:
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
         NODE_ENV: "production"
+        NPM_CONFIG_PRODUCTION: false
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
