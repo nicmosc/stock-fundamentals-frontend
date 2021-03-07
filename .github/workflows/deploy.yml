@@ -1,4 +1,4 @@
-name: Delploy
+name: Deploy
 
 on:
   push:
@@ -15,18 +15,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Deploy
+    - name: Build
       run: |
-        npm install
         echo "${{ secrets.REACT_APP_API_HOST }} ${{ env.REACT_APP_API_HOST }}"
-        npm run deploy
+        npm install
+        npm run-script build
       env:
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+        NODE_ENV: "production"
 
-    # - name: Deploy
-    #   uses: JamesIves/github-pages-deploy-action@releases/v3
-    #   with:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
-    #     BRANCH: gh-pages
-    #     FOLDER: build
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+        BRANCH: gh-pages
+        FOLDER: build
