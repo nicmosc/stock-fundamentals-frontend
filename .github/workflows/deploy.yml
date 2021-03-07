@@ -18,9 +18,8 @@ jobs:
     - name: Deploy
       run: |
         npm install
+        echo "${{ secrets.REACT_APP_API_HOST }} ${{ env.REACT_APP_API_HOST }}"
         npm run deploy
-      with:
-        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
       env:
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
 
