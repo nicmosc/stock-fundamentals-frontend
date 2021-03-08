@@ -18,7 +18,7 @@ jobs:
     - name: Build
       run: |
         npm install
-        REACT_APP_API_HOST="$REACT_APP_API_HOST" npm run-script build
+        npm run-script build
       env:
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
 
