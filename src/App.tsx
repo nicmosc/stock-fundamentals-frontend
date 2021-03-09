@@ -76,7 +76,7 @@ export const App = () => {
           </Tooltip>
         </Title>
       </Box>
-      <Box style={{ height: '100%' }} size={{ top: Size.LARGE }}>
+      <Box style={{ height: '100%' }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
           <Panel></Panel>
         </div>

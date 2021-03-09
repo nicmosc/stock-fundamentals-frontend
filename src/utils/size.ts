@@ -1,9 +1,9 @@
-const BASE = 8;
+const BASE = 14;
 
-export const Size = {
-  EXTRA_SMALL: BASE / 2,
-  SMALL: 8,
-  MEDIUM: BASE * 2,
-  LARGE: BASE * 3,
-  EXTRA_LARGE: BASE * 4,
-};
+export enum Size {
+  EXTRA_SMALL = 4,
+  SMALL = 8,
+  MEDIUM = BASE,
+  LARGE = BASE * 2,
+  EXTRA_LARGE = BASE * 3,
+}
