@@ -22,7 +22,7 @@ const styles = {
     box-shadow: 0px 4px 8px rgba(82, 196, 26, 0.4);
     z-index: 1;
 
-    &::after {
+    &::before {
       content: ' ';
       position: absolute;
       top: 50%;
@@ -44,7 +44,7 @@ const styles = {
     );
     box-shadow: 0px 4px 8px rgba(245, 34, 45, 0.4);
 
-    &::after {
+    &::before {
       background: ${Color.red.primary};
     }
   `,

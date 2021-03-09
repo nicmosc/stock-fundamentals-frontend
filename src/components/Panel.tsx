@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
 
 import { Stock } from '../types';
-import { Color, Size, getSectorColors } from '../utils';
+import { Color, Size, getSectorColors, round } from '../utils';
 import { Box } from './Box';
 import { Discount } from './Discount';
 import { Text } from './Text';
@@ -17,6 +17,16 @@ const styles = {
     background: ${Color.white};
     width: 100%;
     height: 100%;
+    overflow: auto;
+
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+
+    &::-webkit-scrollbar {
+      /* WebKit */
+      width: 0;
+      height: 0;
+    }
   `,
   moreIcon: css`
     color: ${Color.tertiary};
@@ -47,13 +57,21 @@ const styles = {
     display: table;
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 ${Size.LARGE}px;
+    border-spacing: 0 ${Size.EXTRA_LARGE}px;
   `,
   row: css`
     display: table-row;
     width: 100%;
     padding-bottom: ${Size.LARGE}px;
     white-space: nowrap;
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+      cursor: pointer;
+      background: ${Color.grey[2]};
+      box-shadow: 0px 0px 0px 10px ${Color.grey[2]};
+      border-radius: ${Size.EXTRA_SMALL}px;
+    }
   `,
   cell: css`
     display: table-cell;
@@ -173,7 +191,7 @@ export const Panel = ({ stocks }: PanelProps) => {
             </Col>
             <Col className={styles.cell} style={{ textAlign: 'right' }}>
               <Text bold size={Size.LARGE}>
-                ${stock.stats.currentPrice}
+                ${round(stock.stats.currentPrice)}
               </Text>
             </Col>
             <Col className={styles.cell}>

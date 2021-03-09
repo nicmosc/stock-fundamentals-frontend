@@ -71,7 +71,8 @@ export const App = () => {
           Stocks at a discounted price for <span style={{ fontStyle: 'italic' }}>you</span>
         </Title>
         <Title align="center" level={3}>
-          We found 23 value stocks out of 11.244 that match your profile{' '}
+          We found {sortedStocks.length} <span style={{ fontStyle: 'italic' }}>value</span> stocks
+          out of 11.244 that match your profile{' '}
           <Tooltip
             title="Only stocks with enough public financial data and solid fundamentals are considered. Growth rate > 0, profit margins > 0, revenue growth > 10%. Also, no penny stocks."
             placement="right"
