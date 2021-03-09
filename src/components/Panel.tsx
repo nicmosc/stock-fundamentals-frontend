@@ -1,7 +1,6 @@
 import { css } from '@emotion/css';
 
-import { colors } from '../utils/colors';
-import { Size } from '../utils/size';
+import { Color, Size } from '../utils';
 
 const styles = {
   panel: css`
@@ -9,7 +8,7 @@ const styles = {
     border-radius: ${Size.EXTRA_LARGE}px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    background: ${colors.grey[0]};
+    background: ${Color.grey[0]};
     width: 100%;
     height: 100%;
   `,

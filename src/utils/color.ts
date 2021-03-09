@@ -1,6 +1,6 @@
 import * as sv from '@ant-design/colors';
 
-export const colors = {
+export const Color = {
   ...sv,
   grey: [
     '#ffffff',

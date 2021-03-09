@@ -1,7 +1,7 @@
 import { Typography } from 'antd';
 import { ReactNode } from 'react';
 
-import { colors } from '../utils';
+import { Color } from '../utils';
 
 interface TitleProps {
   level: 1 | 2 | 3 | 4 | 5;
@@ -15,7 +15,7 @@ export const Title = ({ level, children, align, inversed = true }: TitleProps) =
     <Typography.Title
       level={level}
       style={{
-        color: inversed ? colors.grey[0] : colors.grey[9],
+        color: inversed ? Color.grey[0] : Color.grey[9],
         fontWeight: 500,
         textAlign: align,
       }}
