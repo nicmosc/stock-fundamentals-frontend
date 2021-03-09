@@ -5,6 +5,7 @@ import { Col, Popover, Row } from 'antd';
 import { Stock } from '../types';
 import { Color, Size } from '../utils';
 import { Box } from './Box';
+import { Discount } from './Discount';
 import { Text } from './Text';
 
 const styles = {
@@ -36,6 +37,7 @@ const styles = {
   `,
   option: css`
     border-radius: ${Size.EXTRA_SMALL}px;
+
     &:hover {
       cursor: pointer;
       background: ${Color.grey[2]};
@@ -171,6 +173,13 @@ export const Panel = ({ stocks }: PanelProps) => {
               <Text bold size={Size.LARGE}>
                 ${stock.stats.currentPrice}
               </Text>
+            </Col>
+            <Col className={styles.cell}>
+              <Box size={{ left: Size.SMALL }}>
+                <Discount
+                  amount={Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100)}
+                />
+              </Box>
             </Col>
           </Row>
         ))}
