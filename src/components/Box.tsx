@@ -12,7 +12,7 @@ type BoxObject = {
 };
 
 interface BoxProps {
-  children: ReactNode;
+  children?: ReactNode;
   size: number | BoxObject;
   inset?: boolean;
   style?: CSSProperties;

@@ -2,13 +2,14 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
 
+import { Stock } from '../types';
 import { Color, Size } from '../utils';
 import { Box } from './Box';
 import { Text } from './Text';
 
 const styles = {
   panel: css`
-    padding: ${Size.MEDIUM}px;
+    padding: ${Size.EXTRA_LARGE}px calc(${Size.EXTRA_LARGE}px + ${Size.MEDIUM}px);
     border-radius: ${Size.EXTRA_LARGE}px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -40,6 +41,22 @@ const styles = {
       background: ${Color.grey[2]};
     }
   `,
+  table: css`
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 ${Size.LARGE}px;
+  `,
+  row: css`
+    display: table-row;
+    width: 100%;
+    padding-bottom: ${Size.LARGE}px;
+    white-space: nowrap;
+  `,
+  cell: css`
+    display: table-cell;
+    vertical-align: middle;
+  `,
 };
 
 const SortBy = () => {
@@ -68,7 +85,7 @@ const SortBy = () => {
                 top: Size.EXTRA_SMALL,
               }}
             >
-              <Text>Alphabetical Order</Text>
+              <Text light>Alphabetical Order</Text>
             </Box>
           </div>
           <div className={styles.option}>
@@ -81,7 +98,7 @@ const SortBy = () => {
                 top: Size.EXTRA_SMALL,
               }}
             >
-              <Text>Largest disconut</Text>
+              <Text light>Largest disconut</Text>
             </Box>
           </div>
           <div className={styles.option}>
@@ -94,7 +111,7 @@ const SortBy = () => {
                 top: Size.EXTRA_SMALL,
               }}
             >
-              <Text>Fundamentals Score</Text>
+              <Text light>Fundamentals Score</Text>
             </Box>
           </div>
         </div>
@@ -105,16 +122,59 @@ const SortBy = () => {
   );
 };
 
-export const Panel = () => {
+interface PanelProps {
+  stocks: Array<Stock>;
+}
+
+export const Panel = ({ stocks }: PanelProps) => {
   return (
     <div className={styles.panel}>
       <Row justify="end">
         <Col>
-          <Box size={{ right: Size.MEDIUM, top: Size.SMALL }}>
-            <SortBy />
-          </Box>
+          <SortBy />
         </Col>
       </Row>
+      <div className={styles.table}>
+        {stocks.map((stock) => (
+          <Row
+            className={styles.row}
+            gutter={Size.MEDIUM}
+            key={stock.symbol}
+            align="middle"
+            justify="space-between"
+          >
+            <Col className={styles.cell}>
+              <Text bold size={Size.LARGE}>
+                {stock.symbol}
+              </Text>
+            </Col>
+            <Col
+              className={styles.cell}
+              style={{
+                maxWidth: 200,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              <Text color={Color.tertiary}>{stock.name}</Text>
+            </Col>
+            <Col className={styles.cell}>
+              <Text color={Color.blue.primary}>{stock.profile.sector}</Text>
+            </Col>
+            <Col className={styles.cell} style={{ textAlign: 'right' }}>
+              <Text color={Color.tertiary}>
+                Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
+              </Text>
+            </Col>
+            <Col className={styles.cell} style={{ textAlign: 'right' }}>
+              <Text bold size={Size.LARGE}>
+                ${stock.stats.currentPrice}
+              </Text>
+            </Col>
+          </Row>
+        ))}
+      </div>
     </div>
   );
 };

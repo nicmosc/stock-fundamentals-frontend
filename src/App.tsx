@@ -1,9 +1,10 @@
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { css, injectGlobal } from '@emotion/css';
 import { Button, Col, Row, Tooltip } from 'antd';
+import { useState } from 'react';
 
 import { Box, Logo, Panel, Title } from './components';
-import { Color, Size } from './utils';
+import { Color, Size, computeRankScores, useFetchStocks } from './utils';
 
 injectGlobal`
   html, body {
@@ -24,7 +25,7 @@ const styles = {
   `,
   container: css`
     width: 100%;
-    max-width: 850px;
+    max-width: 1000px;
     height: 100%;
     margin: 0 auto;
   `,
@@ -40,6 +41,15 @@ const styles = {
 };
 
 export const App = () => {
+  const { stocks = [] } = useFetchStocks();
+  const [margin] = useState<number>(50);
+  const [roi] = useState<number>(20);
+
+  const safety = 1 - margin / 100;
+
+  const computedStocks = computeRankScores(roi / 100, safety, stocks);
+  const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div className={styles.app}>
       <Row justify="space-between">
@@ -76,9 +86,9 @@ export const App = () => {
           </Tooltip>
         </Title>
       </Box>
-      <Box style={{ height: '100%' }} size={{ top: Size.SMALL }}>
+      <Box style={{ height: '100%', overflow: 'hidden' }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
-          <Panel></Panel>
+          <Panel stocks={sortedStocks} />
         </div>
       </Box>
     </div>
