@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
 
 import { Stock } from '../types';
-import { Color, Size } from '../utils';
+import { Color, Size, getSectorColors } from '../utils';
 import { Box } from './Box';
 import { Discount } from './Discount';
 import { Text } from './Text';
@@ -162,7 +162,9 @@ export const Panel = ({ stocks }: PanelProps) => {
               <Text color={Color.tertiary}>{stock.name}</Text>
             </Col>
             <Col className={styles.cell}>
-              <Text color={Color.blue.primary}>{stock.profile.sector}</Text>
+              <Text color={getSectorColors(stock.profile.sector).default}>
+                {stock.profile.sector}
+              </Text>
             </Col>
             <Col className={styles.cell} style={{ textAlign: 'right' }}>
               <Text color={Color.tertiary}>

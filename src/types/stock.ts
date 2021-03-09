@@ -1,10 +1,22 @@
+export enum Sector {
+  BASIC_MATERIALS = 'Basic Materials',
+  COMMUNICATION_SERVICES = 'Communication Services',
+  CONSUMER_CYCLICAL = 'Consumer Cyclical',
+  CONSUMER_DEFENSIVE = 'Consumer Defensive',
+  ENERGY = 'Energy',
+  FINANCIAL_SERVICES = 'Financial Services',
+  HEALTHCARE = 'Healthcare',
+  INDUSTRIALS = 'Industrials',
+  TECHNOLOGY = 'Technology',
+}
+
 export interface StockFromServer {
   symbol: string;
   name: string;
   profile: {
     country: string;
     industry: string;
-    sector: string;
+    sector: Sector;
   };
   stats: {
     revenueGrowth: number; // yoy
