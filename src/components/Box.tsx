@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 function _isObject(prop: number | Object): prop is BoxObject {
   return typeof prop !== 'number';
@@ -15,9 +15,10 @@ interface BoxProps {
   children: ReactNode;
   size: number | BoxObject;
   inset?: boolean;
+  style?: CSSProperties;
 }
 
-export const Box = ({ children, size, inset }: BoxProps) => {
+export const Box = ({ children, size, inset, style = {} }: BoxProps) => {
   const styles =
     inset === true
       ? {
@@ -33,5 +34,5 @@ export const Box = ({ children, size, inset }: BoxProps) => {
           marginBottom: _isObject(size) ? size.bottom : size,
         };
 
-  return <div style={styles}>{children}</div>;
+  return <div style={{ ...styles, ...style }}>{children}</div>;
 };

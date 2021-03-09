@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css';
 
-import { Box, Logo, Title } from './components';
+import { Box, Logo, Panel, Title } from './components';
 import { Size, colors } from './utils';
 
 injectGlobal`
@@ -12,7 +12,15 @@ injectGlobal`
 const styles = {
   app: css`
     height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: linear-gradient(17deg, ${colors.volcano[5]} 2.04%, ${colors.orange[5]} 90.35%);
+  `,
+  container: css`
+    width: 100%;
+    max-width: 850px;
+    height: 100%;
+    margin: 0 auto;
   `,
 };
 
@@ -29,6 +37,11 @@ export const App = () => {
         <Title align="center" level={3}>
           We found 23 value stocks out of 11.244 that match your profile
         </Title>
+      </Box>
+      <Box style={{ height: '100%' }} size={{ top: Size.LARGE }}>
+        <div className={styles.container}>
+          <Panel></Panel>
+        </div>
       </Box>
     </div>
   );
