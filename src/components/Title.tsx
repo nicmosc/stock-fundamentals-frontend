@@ -15,7 +15,7 @@ export const Title = ({ level, children, align, inversed = true }: TitleProps) =
     <Typography.Title
       level={level}
       style={{
-        color: inversed ? Color.grey[0] : Color.grey[9],
+        color: inversed ? Color.white : Color.grey[9],
         fontWeight: 500,
         textAlign: align,
       }}

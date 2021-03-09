@@ -22,7 +22,7 @@ interface LogoProps {
 }
 
 export const Logo = ({ inversed = true }: LogoProps) => {
-  const fill = inversed ? Color.grey[0] : Color.grey[3];
+  const fill = inversed ? Color.white : Color.grey[3];
   return (
     <div className={styles.logo}>
       <svg viewBox="0 0 129 129" fill="none" xmlns="http://www.w3.org/2000/svg">

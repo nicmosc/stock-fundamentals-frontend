@@ -2,6 +2,7 @@ import * as sv from '@ant-design/colors';
 
 export const Color = {
   ...sv,
+  white: '#ffffff',
   grey: [
     '#ffffff',
     '#fafafa',
@@ -17,4 +18,7 @@ export const Color = {
     '#141414',
     '#000000',
   ],
+  primary: '#262626',
+  secondary: '#bfbfbf',
+  tertiary: '#d9d9d9',
 };

@@ -8,7 +8,7 @@ const styles = {
     border-radius: ${Size.EXTRA_LARGE}px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    background: ${Color.grey[0]};
+    background: ${Color.white};
     width: 100%;
     height: 100%;
   `,
