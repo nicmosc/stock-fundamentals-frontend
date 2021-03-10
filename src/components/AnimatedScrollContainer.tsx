@@ -1,12 +1,18 @@
 import { css, cx } from '@emotion/css';
-import { Variants, motion, useDragControls, useMotionValue, useTransform } from 'framer-motion';
+import {
+  PanInfo,
+  Variants,
+  animate,
+  motion,
+  useDragControls,
+  useMotionValue,
+  useTransform,
+} from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 
 import { Size } from '../utils';
 
 const TOP_HEIGHT = 370;
-const ANIMATION_DURATION = '0.8s';
-const ANIMATION_CURVE = 'cubic-bezier(0.86,0,0.07,1)';
 
 const styles = {
   container: css`
@@ -22,18 +28,10 @@ const styles = {
     left: 0;
     top: 0;
     z-index: -1;
-    /* transform: translateY(30px) scale(0.7) rotateX(15deg); */
-    /* opacity: 0; */
-    /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
-  `,
-  topActive: css`
-    /* opacity: 1; */
-    /* transform: translateY(0) scale(1) rotateX(0); */
   `,
   bottom: css`
     height: 100%;
     position: relative;
-    /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
   `,
   bottomActive: css`
     > * {
@@ -66,9 +64,15 @@ interface AnimatedScrollContainerProps {
   top: ReactNode;
   bottom: ReactNode;
   active: boolean;
+  onResetPanel: VoidFunction;
 }
 
-export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollContainerProps) => {
+export const AnimatedScrollContainer = ({
+  top,
+  bottom,
+  active,
+  onResetPanel,
+}: AnimatedScrollContainerProps) => {
   const dragControls = useDragControls();
   const scrollYOffset = useMotionValue(0);
   const opacity = useTransform(scrollYOffset, [0, totalY], [0, 1]);
@@ -76,17 +80,48 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
   const scale = useTransform(scrollYOffset, [0, totalY], [0.7, 1]);
   const rotateX = useTransform(scrollYOffset, [0, totalY], [15, 0]);
 
+  const handleActiveChange = () => {
+    if (!active && scrollYOffset.get() !== 0) {
+      animate(scrollYOffset, 0, {
+        duration: 0.8,
+        ease: [0.86, 0, 0.07, 1],
+      });
+    } else if (active && scrollYOffset.get() !== totalY) {
+      animate(scrollYOffset, totalY, {
+        duration: 0.8,
+        ease: [0.86, 0, 0.07, 1],
+      });
+    }
+  };
+
   const handleWheelChange = (e: WheelEvent) => {
-    const { deltaY } = e;
+    const { deltaY: _deltaY } = e;
+    const deltaY = _deltaY * 1.5;
     const currentValue = scrollYOffset.get();
     const newValue = Math.max(
       Math.min(currentValue + Math.abs(deltaY) * (deltaY < 0 ? 1 : -1), totalY),
       0,
     );
-    scrollYOffset.set(newValue);
+    animate(scrollYOffset, newValue, {
+      duration: 0.1,
+    });
+
+    if (newValue < totalY - totalY / 4) {
+      onResetPanel();
+    }
+  };
+
+  const handleDragPanel = (_: any, info: PanInfo) => {
+    if (info.offset.y < -500) {
+      onResetPanel();
+    }
+
+    document.body.style.cursor = 'grabbing';
   };
 
   useEffect(() => {
+    handleActiveChange();
+
     if (active) {
       document.addEventListener('wheel', handleWheelChange);
 
@@ -99,7 +134,6 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
   return (
     <div className={styles.container}>
       <motion.div
-        transition={{ duration: 2 }}
         initial="hidden"
         style={{
           opacity,
@@ -113,7 +147,6 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
         {top}
       </motion.div>
       <motion.div
-        transition={{ duration: 2 }}
         variants={bottomVariants}
         initial="default"
         style={{
@@ -121,7 +154,7 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
         }}
         drag="y"
         dragControls={dragControls}
-        onDrag={() => (document.body.style.cursor = 'grabbing')}
+        onDrag={handleDragPanel}
         onDragEnd={() => (document.body.style.cursor = '')}
         onDragStart={(e, info) => {
           if ((e.target as any).dataset.element !== 'handle') {
@@ -131,7 +164,7 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
           }
         }}
         dragElastic={0.2}
-        dragConstraints={{ top: 0, bottom: 0 }}
+        dragConstraints={{ top: active ? totalY : 0, bottom: active ? totalY : 0 }}
         className={cx(styles.bottom, { [styles.bottomActive]: active })}
       >
         {bottom}

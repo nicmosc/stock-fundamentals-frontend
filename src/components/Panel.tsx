@@ -1,6 +1,7 @@
 import { EllipsisOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
+import { Fragment } from 'react';
 
 import { Stock } from '../types';
 import { Color, Size, getSectorColors, round } from '../utils';
@@ -38,6 +39,8 @@ const styles = {
     height: 5px;
     border-radius: 10px;
     background: ${Color.secondary};
+    z-index: 1;
+    pointer-events: all !important;
 
     &::after {
       content: ' ';
@@ -173,64 +176,66 @@ interface PanelProps {
 
 export const Panel = ({ stocks, onClickStock }: PanelProps) => {
   return (
-    <div className={styles.panel}>
+    <Fragment>
       <div className={styles.dragIcon} data-element="handle" />
-      <Row justify="end">
-        <Col>
-          <SortBy />
-        </Col>
-      </Row>
-      <div className={styles.table}>
-        {stocks.map((stock) => (
-          <Row
-            onClick={() => onClickStock(stock)}
-            className={styles.row}
-            gutter={Size.MEDIUM}
-            key={stock.symbol}
-            align="middle"
-            justify="space-between"
-          >
-            <Col className={styles.cell}>
-              <Text bold size={Size.LARGE}>
-                {stock.symbol}
-              </Text>
-            </Col>
-            <Col
-              className={styles.cell}
-              style={{
-                maxWidth: 200,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
+      <div className={styles.panel}>
+        <Row justify="end">
+          <Col>
+            <SortBy />
+          </Col>
+        </Row>
+        <div className={styles.table}>
+          {stocks.map((stock) => (
+            <Row
+              onClick={() => onClickStock(stock)}
+              className={styles.row}
+              gutter={Size.MEDIUM}
+              key={stock.symbol}
+              align="middle"
+              justify="space-between"
             >
-              <Text color={Color.tertiary}>{stock.name}</Text>
-            </Col>
-            <Col className={styles.cell}>
-              <Text color={getSectorColors(stock.profile.sector).default}>
-                {stock.profile.sector}
-              </Text>
-            </Col>
-            <Col className={styles.cell} style={{ textAlign: 'right' }}>
-              <Text color={Color.tertiary}>
-                Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
-              </Text>
-            </Col>
-            <Col className={styles.cell} style={{ textAlign: 'right' }}>
-              <Text bold size={Size.LARGE}>
-                ${round(stock.stats.currentPrice)}
-              </Text>
-            </Col>
-            <Col className={styles.cell}>
-              <Box size={{ left: Size.SMALL }}>
-                <Discount
-                  amount={Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100)}
-                />
-              </Box>
-            </Col>
-          </Row>
-        ))}
+              <Col className={styles.cell}>
+                <Text bold size={Size.LARGE}>
+                  {stock.symbol}
+                </Text>
+              </Col>
+              <Col
+                className={styles.cell}
+                style={{
+                  maxWidth: 200,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <Text color={Color.tertiary}>{stock.name}</Text>
+              </Col>
+              <Col className={styles.cell}>
+                <Text color={getSectorColors(stock.profile.sector).default}>
+                  {stock.profile.sector}
+                </Text>
+              </Col>
+              <Col className={styles.cell} style={{ textAlign: 'right' }}>
+                <Text color={Color.tertiary}>
+                  Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
+                </Text>
+              </Col>
+              <Col className={styles.cell} style={{ textAlign: 'right' }}>
+                <Text bold size={Size.LARGE}>
+                  ${round(stock.stats.currentPrice)}
+                </Text>
+              </Col>
+              <Col className={styles.cell}>
+                <Box size={{ left: Size.SMALL }}>
+                  <Discount
+                    amount={Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100)}
+                  />
+                </Box>
+              </Col>
+            </Row>
+          ))}
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };

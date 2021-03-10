@@ -100,6 +100,7 @@ export const App = () => {
       <Box style={{ display: 'flex', flex: 1, minHeight: 0 }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
           <AnimatedScrollContainer
+            onResetPanel={() => setActiveStock(undefined)}
             active={activeStock != null}
             top={<StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />}
             bottom={<Panel stocks={sortedStocks} onClickStock={setActiveStock} />}
