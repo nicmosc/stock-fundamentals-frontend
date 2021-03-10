@@ -1,5 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
+import { useEffect, useState } from 'react';
 
 import { Stock } from '../types';
 import { Color, Size } from '../utils';
@@ -8,12 +9,11 @@ import { TradingViewChart } from './TradingViewChart';
 const styles = {
   panel: css`
     position: relative;
-    height: 370px;
+    height: 100%;
     padding: ${Size.EXTRA_LARGE}px calc(${Size.EXTRA_LARGE}px + ${Size.MEDIUM}px);
     border-radius: ${Size.EXTRA_LARGE}px;
     background: ${Color.white};
     width: 100%;
-    margin-bottom: ${Size.LARGE}px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15), 0px 50px 20px -34px rgba(0, 0, 0, 0.08);
     overflow: hidden;
   `,
@@ -52,11 +52,23 @@ const styles = {
 };
 
 interface StockPanelProps {
-  stock: Stock;
+  stock?: Stock;
   onClickClose: VoidFunction;
 }
 
-export const StockPanel = ({ stock, onClickClose }: StockPanelProps) => {
+export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => {
+  const [stock, setStock] = useState<Stock | undefined>(_stock);
+
+  useEffect(() => {
+    if (_stock != null) {
+      setStock(_stock);
+    }
+  }, [_stock?.symbol]);
+
+  if (stock == null) {
+    return null;
+  }
+
   return (
     <div className={styles.panel}>
       <div className={styles.close} onClick={onClickClose}>

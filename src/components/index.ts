@@ -5,3 +5,4 @@ export * from './Panel';
 export * from './Text';
 export * from './Discount';
 export * from './StockPanel';
+export * from './AnimatedScrollContainer';

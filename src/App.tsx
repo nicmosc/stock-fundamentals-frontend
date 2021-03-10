@@ -3,7 +3,7 @@ import { css, injectGlobal } from '@emotion/css';
 import { Button, Col, Row, Tooltip } from 'antd';
 import { useState } from 'react';
 
-import { Box, Logo, Panel, StockPanel, Title } from './components';
+import { AnimatedScrollContainer, Box, Logo, Panel, StockPanel, Title } from './components';
 import { Stock } from './types';
 import { Color, Size, computeRankScores, useFetchStocks } from './utils';
 
@@ -91,10 +91,11 @@ export const App = () => {
       </Box>
       <Box style={{ height: '100%', overflow: 'hidden' }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
-          {activeStock != null ? (
-            <StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />
-          ) : null}
-          <Panel stocks={sortedStocks} onClickStock={setActiveStock} />
+          <AnimatedScrollContainer
+            active={activeStock != null}
+            top={<StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />}
+            bottom={<Panel stocks={sortedStocks} onClickStock={setActiveStock} />}
+          />
         </div>
       </Box>
     </div>
