@@ -32,11 +32,11 @@ const styles = {
     margin: 0 auto;
     padding-top: 100px;
     transform: translateY(-100px);
-    /* pointer-events: none;
+    pointer-events: none;
 
     * {
       pointer-events: auto;
-    } */
+    }
   `,
   button: css`
     color: ${Color.white} !important;
@@ -107,7 +107,13 @@ export const App = () => {
             onResetPanel={() => setActiveStock(undefined)}
             active={activeStock != null}
             top={<StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />}
-            bottom={<Panel stocks={sortedStocks} onClickStock={setActiveStock} />}
+            bottom={
+              <Panel
+                hidden={activeStock != null}
+                stocks={sortedStocks}
+                onClickStock={setActiveStock}
+              />
+            }
           />
         </div>
       </Box>

@@ -1,4 +1,4 @@
-import { css, cx } from '@emotion/css';
+import { css } from '@emotion/css';
 import {
   PanInfo,
   Variants,
@@ -32,11 +32,6 @@ const styles = {
   bottom: css`
     height: 100%;
     position: relative;
-  `,
-  bottomActive: css`
-    > * {
-      pointer-events: none;
-    }
   `,
 };
 
@@ -165,7 +160,7 @@ export const AnimatedScrollContainer = ({
         }}
         dragElastic={0.3}
         dragConstraints={{ top: active ? totalY : 0, bottom: active ? totalY : 0 }}
-        className={cx(styles.bottom, { [styles.bottomActive]: active })}
+        className={styles.bottom}
       >
         {bottom}
       </motion.div>

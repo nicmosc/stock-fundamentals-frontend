@@ -1,10 +1,10 @@
 import { EllipsisOutlined } from '@ant-design/icons';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
 import { Fragment } from 'react';
 
 import { Stock } from '../types';
-import { Color, Size, getSectorColors, round } from '../utils';
+import { ANIMATION_CURVE, ANIMATION_TIME, Color, Size, getSectorColors, round } from '../utils';
 import { Box } from './Box';
 import { Discount } from './Discount';
 import { Text } from './Text';
@@ -29,6 +29,29 @@ const styles = {
       width: 0;
       height: 0;
     }
+
+    &::after {
+      content: ' ';
+      position: fixed;
+      border-radius: ${Size.EXTRA_LARGE}px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: ${Color.white};
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      transition: all ${ANIMATION_TIME} ${ANIMATION_TIME} ${ANIMATION_CURVE};
+    }
+  `,
+  hidden: css`
+    &::after {
+      opacity: 0.7;
+      pointer-events: auto;
+    }
   `,
   dragIcon: css`
     position: absolute;
@@ -38,8 +61,8 @@ const styles = {
     width: 80px;
     height: 5px;
     border-radius: 10px;
-    background: ${Color.secondary};
-    z-index: 1;
+    background: ${Color.tertiary};
+    z-index: 2;
     pointer-events: all !important;
 
     &::after {
@@ -172,13 +195,14 @@ const SortBy = () => {
 interface PanelProps {
   stocks: Array<Stock>;
   onClickStock: (stock: Stock) => void;
+  hidden: boolean;
 }
 
-export const Panel = ({ stocks, onClickStock }: PanelProps) => {
+export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
   return (
     <Fragment>
       <div className={styles.dragIcon} data-element="handle" />
-      <div className={styles.panel}>
+      <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
         <Row justify="end">
           <Col>
             <SortBy />

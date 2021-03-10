@@ -62,6 +62,8 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
   useEffect(() => {
     if (_stock != null) {
       setStock(_stock);
+    } else {
+      setTimeout(() => setStock(undefined), 1000);
     }
   }, [_stock?.symbol]);
 
