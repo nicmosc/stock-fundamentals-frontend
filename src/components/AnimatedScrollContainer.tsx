@@ -1,6 +1,6 @@
-import { css } from '@emotion/css';
-import { Variants, motion, useDragControls } from 'framer-motion';
-import { ReactNode } from 'react';
+import { css, cx } from '@emotion/css';
+import { Variants, motion, useDragControls, useMotionValue, useTransform } from 'framer-motion';
+import { ReactNode, useEffect } from 'react';
 
 import { Size } from '../utils';
 
@@ -36,17 +36,13 @@ const styles = {
     /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
   `,
   bottomActive: css`
-    /* transform: translateY(calc(${TOP_HEIGHT}px + ${Size.LARGE}px)); */
+    > * {
+      pointer-events: none;
+    }
   `,
 };
 
 const topVariants: Variants = {
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    rotateX: 0,
-  },
   hidden: {
     opacity: 0,
     y: 30,
@@ -55,13 +51,15 @@ const topVariants: Variants = {
   },
 };
 
+const totalY = TOP_HEIGHT + Size.LARGE;
+
 const bottomVariants: Variants = {
   default: {
     y: 0,
   },
-  compact: {
-    y: TOP_HEIGHT + Size.LARGE,
-  },
+  compact: (progress: number) => ({
+    y: totalY * progress,
+  }),
 };
 
 interface AnimatedScrollContainerProps {
@@ -72,13 +70,43 @@ interface AnimatedScrollContainerProps {
 
 export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollContainerProps) => {
   const dragControls = useDragControls();
+  const scrollYOffset = useMotionValue(0);
+  const opacity = useTransform(scrollYOffset, [0, totalY], [0, 1]);
+  const y = useTransform(scrollYOffset, [0, totalY], [30, 0]);
+  const scale = useTransform(scrollYOffset, [0, totalY], [0.7, 1]);
+  const rotateX = useTransform(scrollYOffset, [0, totalY], [15, 0]);
+
+  const handleWheelChange = (e: WheelEvent) => {
+    const { deltaY } = e;
+    const currentValue = scrollYOffset.get();
+    const newValue = Math.max(
+      Math.min(currentValue + Math.abs(deltaY) * (deltaY < 0 ? 1 : -1), totalY),
+      0,
+    );
+    scrollYOffset.set(newValue);
+  };
+
+  useEffect(() => {
+    if (active) {
+      document.addEventListener('wheel', handleWheelChange);
+
+      return () => {
+        document.removeEventListener('wheel', handleWheelChange);
+      };
+    }
+  }, [active]);
 
   return (
     <div className={styles.container}>
       <motion.div
         transition={{ duration: 2 }}
         initial="hidden"
-        animate={active ? 'visible' : undefined}
+        style={{
+          opacity,
+          y,
+          scale,
+          rotateX,
+        }}
         variants={topVariants}
         className={styles.top}
       >
@@ -88,7 +116,9 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
         transition={{ duration: 2 }}
         variants={bottomVariants}
         initial="default"
-        animate={active ? 'compact' : undefined}
+        style={{
+          y: scrollYOffset,
+        }}
         drag="y"
         dragControls={dragControls}
         onDrag={() => (document.body.style.cursor = 'grabbing')}
@@ -102,7 +132,7 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
         }}
         dragElastic={0.2}
         dragConstraints={{ top: 0, bottom: 0 }}
-        className={styles.bottom}
+        className={cx(styles.bottom, { [styles.bottomActive]: active })}
       >
         {bottom}
       </motion.div>
