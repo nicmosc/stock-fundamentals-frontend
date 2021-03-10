@@ -112,7 +112,7 @@ export const AnimatedScrollContainer = ({
   };
 
   const handleDragPanel = (_: any, info: PanInfo) => {
-    if (info.offset.y < -500) {
+    if (info.offset.y < -300) {
       onResetPanel();
     }
 
@@ -163,7 +163,7 @@ export const AnimatedScrollContainer = ({
             });
           }
         }}
-        dragElastic={0.2}
+        dragElastic={0.3}
         dragConstraints={{ top: active ? totalY : 0, bottom: active ? totalY : 0 }}
         className={cx(styles.bottom, { [styles.bottomActive]: active })}
       >

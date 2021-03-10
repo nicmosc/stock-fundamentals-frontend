@@ -97,7 +97,11 @@ export const App = () => {
           </Tooltip>
         </Title>
       </Box>
-      <Box style={{ display: 'flex', flex: 1, minHeight: 0 }} size={{ top: Size.SMALL }}>
+      <Box
+        style={{ display: 'flex', flex: 1, minHeight: 0 }}
+        inset
+        size={{ top: Size.SMALL, left: Size.SMALL, right: Size.SMALL }}
+      >
         <div className={styles.container}>
           <AnimatedScrollContainer
             onResetPanel={() => setActiveStock(undefined)}
