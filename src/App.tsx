@@ -32,11 +32,11 @@ const styles = {
     margin: 0 auto;
     padding-top: 100px;
     transform: translateY(-100px);
-    pointer-events: none;
+    /* pointer-events: none;
 
-    > * {
+    * {
       pointer-events: auto;
-    }
+    } */
   `,
   button: css`
     color: ${Color.white} !important;

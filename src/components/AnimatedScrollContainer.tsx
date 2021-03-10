@@ -1,5 +1,5 @@
-import { css, cx } from '@emotion/css';
-import { motion, useDragControls } from 'framer-motion';
+import { css } from '@emotion/css';
+import { Variants, motion, useDragControls } from 'framer-motion';
 import { ReactNode } from 'react';
 
 import { Size } from '../utils';
@@ -40,6 +40,30 @@ const styles = {
   `,
 };
 
+const topVariants: Variants = {
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    rotateX: 0,
+  },
+  hidden: {
+    opacity: 0,
+    y: 30,
+    scale: 0.7,
+    rotateX: 15,
+  },
+};
+
+const bottomVariants: Variants = {
+  default: {
+    y: 0,
+  },
+  compact: {
+    y: TOP_HEIGHT + Size.LARGE,
+  },
+};
+
 interface AnimatedScrollContainerProps {
   top: ReactNode;
   bottom: ReactNode;
@@ -51,8 +75,20 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
 
   return (
     <div className={styles.container}>
-      <motion.div className={cx(styles.top, { [styles.topActive]: active })}>{top}</motion.div>
       <motion.div
+        transition={{ duration: 2 }}
+        initial="hidden"
+        animate={active ? 'visible' : undefined}
+        variants={topVariants}
+        className={styles.top}
+      >
+        {top}
+      </motion.div>
+      <motion.div
+        transition={{ duration: 2 }}
+        variants={bottomVariants}
+        initial="default"
+        animate={active ? 'compact' : undefined}
         drag="y"
         dragControls={dragControls}
         onDrag={() => (document.body.style.cursor = 'grabbing')}
@@ -66,7 +102,7 @@ export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollC
         }}
         dragElastic={0.2}
         dragConstraints={{ top: 0, bottom: 0 }}
-        className={cx(styles.bottom, { [styles.bottomActive]: active })}
+        className={styles.bottom}
       >
         {bottom}
       </motion.div>
