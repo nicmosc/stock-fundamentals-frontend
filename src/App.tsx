@@ -20,6 +20,7 @@ injectGlobal`
 const styles = {
   app: css`
     height: 100vh;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     background: linear-gradient(17deg, ${Color.volcano[5]} 2.04%, ${Color.orange[5]} 90.35%);
@@ -27,8 +28,15 @@ const styles = {
   container: css`
     width: 100%;
     max-width: 1000px;
-    height: 100%;
+    height: calc(100% + 400px);
     margin: 0 auto;
+    padding-top: 100px;
+    transform: translateY(-100px);
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
   `,
   button: css`
     color: ${Color.white} !important;
@@ -89,7 +97,10 @@ export const App = () => {
           </Tooltip>
         </Title>
       </Box>
-      <Box style={{ height: '100%', overflow: 'hidden' }} size={{ top: Size.SMALL }}>
+      <Box
+        style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}
+        size={{ top: Size.SMALL }}
+      >
         <div className={styles.container}>
           <AnimatedScrollContainer
             active={activeStock != null}

@@ -1,4 +1,5 @@
 import { css, cx } from '@emotion/css';
+import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 import { Size } from '../utils';
@@ -20,22 +21,21 @@ const styles = {
     position: absolute;
     left: 0;
     top: 0;
-    transform: translateY(30px) scale(0.7) rotateX(15deg);
-    opacity: 0;
-    transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE};
+    z-index: -1;
+    /* transform: translateY(30px) scale(0.7) rotateX(15deg); */
+    /* opacity: 0; */
+    /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
   `,
   topActive: css`
-    opacity: 1;
-    transform: translateY(0) scale(1) rotateX(0);
-    /* transition-delay: ${ANIMATION_DURATION}; */
+    /* opacity: 1; */
+    /* transform: translateY(0) scale(1) rotateX(0); */
   `,
   bottom: css`
     height: 100%;
-    transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE};
+    /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
   `,
   bottomActive: css`
-    transform: translateY(calc(${TOP_HEIGHT}px + ${Size.LARGE}px));
-    /* transition-delay: ${ANIMATION_DURATION}; */
+    /* transform: translateY(calc(${TOP_HEIGHT}px + ${Size.LARGE}px)); */
   `,
 };
 
@@ -48,8 +48,15 @@ interface AnimatedScrollContainerProps {
 export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollContainerProps) => {
   return (
     <div className={styles.container}>
-      <div className={cx(styles.top, { [styles.topActive]: active })}>{top}</div>
-      <div className={cx(styles.bottom, { [styles.bottomActive]: active })}>{bottom}</div>
+      <motion.div className={cx(styles.top, { [styles.topActive]: active })}>{top}</motion.div>
+      <motion.div
+        drag="y"
+        dragElastic={0.2}
+        dragConstraints={{ top: 0, bottom: 0 }}
+        className={cx(styles.bottom, { [styles.bottomActive]: active })}
+      >
+        {bottom}
+      </motion.div>
     </div>
   );
 };
