@@ -1,9 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
+import { Col, Row, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { Stock } from '../types';
 import { Color, Size } from '../utils';
+import { Box } from './Box';
+import { Text } from './Text';
 import { TradingViewChart } from './TradingViewChart';
 
 const styles = {
@@ -76,7 +79,26 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
       <div className={styles.close} onClick={onClickClose}>
         <PlusOutlined />
       </div>
-      {stock.name}
+      <Row gutter={Size.MEDIUM} align="middle">
+        <Col>
+          <Text bold size={Size.LARGE}>
+            {stock.symbol}
+          </Text>
+        </Col>
+        <Col>
+          <Typography.Link
+            style={{ fontWeight: 'bold' }}
+            href={`https://finance.yahoo.com/quote/${stock.symbol}`}
+            target="_blank"
+          >
+            Details (Yahoo)
+          </Typography.Link>
+        </Col>
+      </Row>
+
+      <Box size={{ top: Size.EXTRA_SMALL }}>
+        <Text color={Color.secondary}>{stock.name}</Text>
+      </Box>
       <div className={styles.chart}>
         <TradingViewChart symbol={stock.symbol} sector={stock.profile.sector} />
       </div>
