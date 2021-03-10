@@ -3,7 +3,8 @@ import { css, injectGlobal } from '@emotion/css';
 import { Button, Col, Row, Tooltip } from 'antd';
 import { useState } from 'react';
 
-import { Box, Logo, Panel, Title } from './components';
+import { Box, Logo, Panel, StockPanel, Title } from './components';
+import { Stock } from './types';
 import { Color, Size, computeRankScores, useFetchStocks } from './utils';
 
 injectGlobal`
@@ -44,6 +45,7 @@ export const App = () => {
   const { stocks = [] } = useFetchStocks();
   const [margin] = useState<number>(50);
   const [roi] = useState<number>(20);
+  const [activeStock, setActiveStock] = useState<Stock>();
 
   const safety = 1 - margin / 100;
 
@@ -89,7 +91,10 @@ export const App = () => {
       </Box>
       <Box style={{ height: '100%', overflow: 'hidden' }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
-          <Panel stocks={sortedStocks} />
+          {activeStock != null ? (
+            <StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />
+          ) : null}
+          <Panel stocks={sortedStocks} onClickStock={setActiveStock} />
         </div>
       </Box>
     </div>

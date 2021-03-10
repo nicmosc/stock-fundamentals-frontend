@@ -37,6 +37,7 @@ module.exports = {
     'no-useless-concat': ['warn'],
     'no-useless-rename': ['warn'],
     'no-whitespace-before-property': ['warn'],
+    'no-undef': ['off'],
 
     // TypeScript
     'no-unused-vars': ['off'],

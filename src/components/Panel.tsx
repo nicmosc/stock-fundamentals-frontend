@@ -144,9 +144,10 @@ const SortBy = () => {
 
 interface PanelProps {
   stocks: Array<Stock>;
+  onClickStock: (stock: Stock) => void;
 }
 
-export const Panel = ({ stocks }: PanelProps) => {
+export const Panel = ({ stocks, onClickStock }: PanelProps) => {
   return (
     <div className={styles.panel}>
       <Row justify="end">
@@ -157,6 +158,7 @@ export const Panel = ({ stocks }: PanelProps) => {
       <div className={styles.table}>
         {stocks.map((stock) => (
           <Row
+            onClick={() => onClickStock(stock)}
             className={styles.row}
             gutter={Size.MEDIUM}
             key={stock.symbol}
