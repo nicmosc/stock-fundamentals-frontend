@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { motion } from 'framer-motion';
+import { motion, useDragControls } from 'framer-motion';
 import { ReactNode } from 'react';
 
 import { Size } from '../utils';
@@ -32,6 +32,7 @@ const styles = {
   `,
   bottom: css`
     height: 100%;
+    position: relative;
     /* transition: all ${ANIMATION_DURATION} ${ANIMATION_CURVE}; */
   `,
   bottomActive: css`
@@ -46,11 +47,23 @@ interface AnimatedScrollContainerProps {
 }
 
 export const AnimatedScrollContainer = ({ top, bottom, active }: AnimatedScrollContainerProps) => {
+  const dragControls = useDragControls();
+
   return (
     <div className={styles.container}>
       <motion.div className={cx(styles.top, { [styles.topActive]: active })}>{top}</motion.div>
       <motion.div
         drag="y"
+        dragControls={dragControls}
+        onDrag={() => (document.body.style.cursor = 'grabbing')}
+        onDragEnd={() => (document.body.style.cursor = '')}
+        onDragStart={(e, info) => {
+          if ((e.target as any).dataset.element !== 'handle') {
+            (dragControls as any).componentControls.forEach((entry: any) => {
+              entry.stop(e, info);
+            });
+          }
+        }}
         dragElastic={0.2}
         dragConstraints={{ top: 0, bottom: 0 }}
         className={cx(styles.bottom, { [styles.bottomActive]: active })}

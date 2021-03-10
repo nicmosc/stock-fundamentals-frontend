@@ -10,6 +10,7 @@ import { Text } from './Text';
 
 const styles = {
   panel: css`
+    position: relative;
     padding: ${Size.EXTRA_LARGE}px calc(${Size.EXTRA_LARGE}px + ${Size.MEDIUM}px);
     border-radius: ${Size.EXTRA_LARGE}px;
     border-bottom-right-radius: 0;
@@ -26,6 +27,29 @@ const styles = {
       /* WebKit */
       width: 0;
       height: 0;
+    }
+  `,
+  dragIcon: css`
+    position: absolute;
+    top: ${Size.MEDIUM}px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 5px;
+    border-radius: 10px;
+    background: ${Color.secondary};
+
+    &::after {
+      content: ' ';
+      position: absolute;
+      left: -20px;
+      top: -20px;
+      width: 120px;
+      height: 45px;
+    }
+
+    &:hover {
+      cursor: grab;
     }
   `,
   moreIcon: css`
@@ -150,6 +174,7 @@ interface PanelProps {
 export const Panel = ({ stocks, onClickStock }: PanelProps) => {
   return (
     <div className={styles.panel}>
+      <div className={styles.dragIcon} data-element="handle" />
       <Row justify="end">
         <Col>
           <SortBy />

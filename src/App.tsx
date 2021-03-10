@@ -97,10 +97,7 @@ export const App = () => {
           </Tooltip>
         </Title>
       </Box>
-      <Box
-        style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}
-        size={{ top: Size.SMALL }}
-      >
+      <Box style={{ display: 'flex', flex: 1, minHeight: 0 }} size={{ top: Size.SMALL }}>
         <div className={styles.container}>
           <AnimatedScrollContainer
             active={activeStock != null}
