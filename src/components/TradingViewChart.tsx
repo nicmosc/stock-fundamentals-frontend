@@ -11,8 +11,9 @@ interface TradingViewChartProps {
 export const TradingViewChart = ({ symbol, sector }: TradingViewChartProps) => {
   const initWidget = () => {
     const colors = getSectorColors(sector);
+
     new TradingView.MediumWidget({
-      symbols: [['Microsoft', symbol]],
+      symbols: [[' ', symbol]],
       chartOnly: true,
       width: '100%',
       height: '100%',
@@ -34,7 +35,7 @@ export const TradingViewChart = ({ symbol, sector }: TradingViewChartProps) => {
 
   return (
     <div className="tradingview-widget-container">
-      <div id="tradingview-container"></div>
+      <div id="tradingview-container" />
     </div>
   );
 };

@@ -1,11 +1,11 @@
-import { LeftOutlined, PlusOutlined } from '@ant-design/icons';
-import { css } from '@emotion/css';
-import { Col, Row, Typography } from 'antd';
+import { LeftOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { css, cx } from '@emotion/css';
+import { Col, Row, Spin, Typography } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useState } from 'react';
 
 import { Stock } from '../types';
-import { Color, Size, getSectorColors, round } from '../utils';
+import { ANIMATION_CURVE, ANIMATION_TIME, Color, Size, getSectorColors, round } from '../utils';
 import { Box } from './Box';
 import { StarsRating } from './StarsRating';
 import { Text } from './Text';
@@ -36,6 +36,12 @@ const styles = {
       color: ${Color.secondary};
     }
   `,
+  spinner: css`
+    position: absolute;
+    bottom: ${Size.LARGE}px;
+    left: 50%;
+    transform: translateX(-50%);
+  `,
   chart: css`
     position: absolute;
     bottom: 0;
@@ -44,6 +50,10 @@ const styles = {
     width: calc(100% + ${Size.EXTRA_LARGE}px * 2);
     pointer-events: none;
     z-index: 0;
+    opacity: 0;
+    transform-origin: bottom;
+    transform: scaleY(0.5);
+    transition: all ${ANIMATION_TIME} ${ANIMATION_CURVE};
 
     &::after {
       content: ' ';
@@ -54,6 +64,10 @@ const styles = {
       left: ${Size.EXTRA_LARGE}px;
       background: ${Color.white};
     }
+  `,
+  visible: css`
+    opacity: 1;
+    transform: scaleY(1);
   `,
   disclaimer: css`
     position: absolute;
@@ -220,6 +234,7 @@ interface StockPanelProps {
 export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => {
   const [stock, setStock] = useState<Stock | undefined>(_stock);
   const [statsVisible, setStatsVisible] = useState(false);
+  const [chartVisible, setChartVisible] = useState(false);
 
   useEffect(() => {
     if (_stock != null) {
@@ -229,6 +244,14 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
       setTimeout(() => setStock(undefined), 1000);
     }
   }, [_stock?.symbol]);
+
+  useEffect(() => {
+    if (stock != null) {
+      setTimeout(() => setChartVisible(true), 2000);
+    } else {
+      setChartVisible(false);
+    }
+  }, [stock]);
 
   if (stock == null) {
     return null;
@@ -284,7 +307,15 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
           *Prices updated daily, fundamentals updated quarterly
         </Text>
       </div>
-      <div className={styles.chart}>
+      {!chartVisible ? (
+        <div className={styles.spinner}>
+          <Spin
+            style={{ color: getSectorColors(stock.profile.sector).default }}
+            indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+          />
+        </div>
+      ) : null}
+      <div className={cx(styles.chart, { [styles.visible]: chartVisible })}>
         <TradingViewChart symbol={stock.symbol} sector={stock.profile.sector} />
       </div>
     </div>
