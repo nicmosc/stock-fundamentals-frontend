@@ -137,8 +137,7 @@ export const AnimatedScrollContainer = ({
           rotateX,
         }}
         variants={topVariants}
-        className={styles.top}
-      >
+        className={styles.top}>
         {top}
       </motion.div>
       <motion.div
@@ -160,8 +159,7 @@ export const AnimatedScrollContainer = ({
         }}
         dragElastic={0.3}
         dragConstraints={{ top: active ? totalY : 0, bottom: active ? totalY : 0 }}
-        className={styles.bottom}
-      >
+        className={styles.bottom}>
         {bottom}
       </motion.div>
     </div>

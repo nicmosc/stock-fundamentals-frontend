@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Stock } from '../types';
 import { Color, Size, getSectorColors } from '../utils';
 import { Box } from './Box';
+import { StarsRating } from './StarsRating';
 import { Text } from './Text';
 import { TradingViewChart } from './TradingViewChart';
 
@@ -91,8 +92,7 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
             <Typography.Link
               style={{ fontWeight: 'bold' }}
               href={`https://finance.yahoo.com/quote/${stock.symbol}`}
-              target="_blank"
-            >
+              target="_blank">
               Details (Yahoo)
             </Typography.Link>
           </Col>
@@ -135,7 +135,9 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
                   <Typography.Link style={{ fontWeight: 'bold' }}>See all</Typography.Link>
                 </Col>
               </Row>
-              <Box size={{ top: Size.MEDIUM }}>stars</Box>
+              <Box size={{ top: Size.MEDIUM }}>
+                <StarsRating rating={5} />
+              </Box>
             </Col>
             <Col span={8}>three</Col>
           </Row>

@@ -155,8 +155,7 @@ const SortBy = () => {
                 left: Size.MEDIUM,
                 bottom: Size.EXTRA_SMALL,
                 top: Size.EXTRA_SMALL,
-              }}
-            >
+              }}>
               <Text light>Alphabetical Order</Text>
             </Box>
           </div>
@@ -168,8 +167,7 @@ const SortBy = () => {
                 left: Size.MEDIUM,
                 bottom: Size.EXTRA_SMALL,
                 top: Size.EXTRA_SMALL,
-              }}
-            >
+              }}>
               <Text light>Largest disconut</Text>
             </Box>
           </div>
@@ -181,14 +179,12 @@ const SortBy = () => {
                 left: Size.MEDIUM,
                 bottom: Size.EXTRA_SMALL,
                 top: Size.EXTRA_SMALL,
-              }}
-            >
+              }}>
               <Text light>Fundamentals Score</Text>
             </Box>
           </div>
         </div>
-      }
-    >
+      }>
       <EllipsisOutlined className={styles.moreIcon} style={{ fontSize: Size.LARGE }} />
     </Popover>
   );
@@ -218,8 +214,7 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
               gutter={Size.MEDIUM}
               key={stock.symbol}
               align="middle"
-              justify="space-between"
-            >
+              justify="space-between">
               <Col className={styles.cell}>
                 <Text bold size={Size.LARGE}>
                   {stock.symbol}
@@ -233,8 +228,7 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                   color: Color.tertiary,
-                }}
-              >
+                }}>
                 <Text color={Color.tertiary}>{stock.name}</Text>
               </Col>
               <Col className={styles.cell}>

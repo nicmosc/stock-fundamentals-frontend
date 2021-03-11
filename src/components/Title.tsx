@@ -18,8 +18,7 @@ export const Title = ({ level, children, align, inversed = true }: TitleProps) =
         color: inversed ? Color.white : Color.grey[9],
         fontWeight: 500,
         textAlign: align,
-      }}
-    >
+      }}>
       {children}
     </Typography.Title>
   );

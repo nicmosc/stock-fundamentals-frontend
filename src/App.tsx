@@ -91,8 +91,7 @@ export const App = () => {
               color: Color.primary,
               padding: Size.MEDIUM,
               borderRadius: Size.SMALL,
-            }}
-          >
+            }}>
             <QuestionCircleFilled style={{ fontSize: Size.MEDIUM, cursor: 'pointer' }} />
           </Tooltip>
         </Title>
@@ -100,8 +99,7 @@ export const App = () => {
       <Box
         style={{ display: 'flex', flex: 1, minHeight: 0 }}
         inset
-        size={{ top: Size.SMALL, left: Size.SMALL, right: Size.SMALL }}
-      >
+        size={{ top: Size.SMALL, left: Size.SMALL, right: Size.SMALL }}>
         <div className={styles.container}>
           <AnimatedScrollContainer
             onResetPanel={() => setActiveStock(undefined)}
