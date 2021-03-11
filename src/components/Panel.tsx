@@ -48,6 +48,8 @@ const styles = {
     }
   `,
   hidden: css`
+    pointer-events: none;
+
     &::after {
       opacity: 0.6;
       pointer-events: auto;
@@ -230,6 +232,7 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
+                  color: Color.tertiary,
                 }}
               >
                 <Text color={Color.tertiary}>{stock.name}</Text>

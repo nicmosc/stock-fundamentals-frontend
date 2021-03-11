@@ -4,7 +4,7 @@ import { Col, Row, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 
 import { Stock } from '../types';
-import { Color, Size } from '../utils';
+import { Color, Size, getSectorColors } from '../utils';
 import { Box } from './Box';
 import { Text } from './Text';
 import { TradingViewChart } from './TradingViewChart';
@@ -41,6 +41,7 @@ const styles = {
     height: 180px;
     width: calc(100% + ${Size.EXTRA_LARGE}px * 2);
     pointer-events: none;
+    z-index: 0;
 
     &::after {
       content: ' ';
@@ -79,26 +80,68 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
       <div className={styles.close} onClick={onClickClose}>
         <PlusOutlined />
       </div>
-      <Row gutter={Size.MEDIUM} align="middle">
-        <Col>
-          <Text bold size={Size.LARGE}>
-            {stock.symbol}
-          </Text>
-        </Col>
-        <Col>
-          <Typography.Link
-            style={{ fontWeight: 'bold' }}
-            href={`https://finance.yahoo.com/quote/${stock.symbol}`}
-            target="_blank"
-          >
-            Details (Yahoo)
-          </Typography.Link>
-        </Col>
-      </Row>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <Row gutter={Size.MEDIUM} align="middle">
+          <Col>
+            <Text bold size={Size.LARGE}>
+              {stock.symbol}
+            </Text>
+          </Col>
+          <Col>
+            <Typography.Link
+              style={{ fontWeight: 'bold' }}
+              href={`https://finance.yahoo.com/quote/${stock.symbol}`}
+              target="_blank"
+            >
+              Details (Yahoo)
+            </Typography.Link>
+          </Col>
+        </Row>
+        <Box size={{ top: Size.EXTRA_SMALL }}>
+          <Text color={Color.secondary}>{stock.name}</Text>
+        </Box>
+        <Box size={{ top: Size.LARGE }}>
+          <Row gutter={Size.LARGE}>
+            <Col span={8}>
+              <Row gutter={[Size.SMALL, Size.EXTRA_SMALL]}>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Sector</Text>
+                </Col>
+                <Col span={18}>
+                  <Text color={getSectorColors(stock.profile.sector).default}>
+                    {stock.profile.sector}
+                  </Text>
+                </Col>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Industry</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{stock.profile.industry}</Text>
+                </Col>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Country</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{stock.profile.country}</Text>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={8}>
+              <Row gutter={Size.MEDIUM}>
+                <Col>
+                  <Text>Fundamentals score:</Text>
+                </Col>
+                <Col>
+                  <Typography.Link style={{ fontWeight: 'bold' }}>See all</Typography.Link>
+                </Col>
+              </Row>
+              <Box size={{ top: Size.MEDIUM }}>stars</Box>
+            </Col>
+            <Col span={8}>three</Col>
+          </Row>
+        </Box>
+      </div>
 
-      <Box size={{ top: Size.EXTRA_SMALL }}>
-        <Text color={Color.secondary}>{stock.name}</Text>
-      </Box>
       <div className={styles.chart}>
         <TradingViewChart symbol={stock.symbol} sector={stock.profile.sector} />
       </div>
