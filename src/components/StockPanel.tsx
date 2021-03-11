@@ -1,10 +1,11 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { LeftOutlined, PlusOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { Col, Row, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Fragment, useEffect, useState } from 'react';
 
 import { Stock } from '../types';
-import { Color, Size, getSectorColors } from '../utils';
+import { Color, Size, getSectorColors, round } from '../utils';
 import { Box } from './Box';
 import { StarsRating } from './StarsRating';
 import { Text } from './Text';
@@ -39,7 +40,7 @@ const styles = {
     position: absolute;
     bottom: 0;
     left: -${Size.EXTRA_LARGE}px;
-    height: 180px;
+    height: 170px;
     width: calc(100% + ${Size.EXTRA_LARGE}px * 2);
     pointer-events: none;
     z-index: 0;
@@ -60,6 +61,155 @@ const styles = {
     right: ${Size.LARGE}px;
     z-index: 2;
   `,
+  back: css`
+    color: ${Color.tertiary};
+
+    path {
+      stroke: ${Color.tertiary};
+      stroke-width: 70;
+    }
+
+    &:hover {
+      cursor: pointer;
+      color: ${Color.secondary};
+
+      span {
+        color: ${Color.secondary} !important;
+      }
+
+      path {
+        stroke: ${Color.secondary};
+      }
+    }
+  `,
+};
+
+type Keys = keyof Omit<Stock['stats'], 'est10YearEPS' | 'est10thYearPrice' | 'currentPrice'>;
+
+const StatMapping: { [key in Keys]: string } = {
+  revenueGrowth: 'Revenue Growth',
+  profitMargin: 'Profit Margins',
+  EPS: 'Earnings Per Share (EPS)',
+  growthRate: 'Growth Rate (5 years est.)',
+  PE: 'PE Ratio',
+  debtToEquity: 'Debt to Equity (D/E)', // TODO color if < 1 (good), > 2 (bad)
+  FCFYield: 'Free Cash Flow Yield',
+  ROIC: 'ROIC',
+};
+
+const percentages = ['revenueGrowth', 'profitMargin', 'growthRate', 'FCFYield', 'ROIC'];
+
+const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: VoidFunction }) => {
+  return (
+    <div>
+      <div onClick={onClickBack} className={styles.back}>
+        <Row gutter={Size.EXTRA_SMALL}>
+          <Col>
+            <LeftOutlined />
+          </Col>
+          <Col>
+            <Text color={Color.tertiary} size={Size.MEDIUM}>
+              Back
+            </Text>
+          </Col>
+        </Row>
+      </div>
+      <Box size={{ top: Size.MEDIUM }}>
+        <Row gutter={[Size.EXTRA_LARGE, Size.SMALL]}>
+          {Object.keys(StatMapping).map((key) => {
+            const value = stats[key as Keys];
+            if (value == null) {
+              return undefined;
+            }
+            return (
+              <Fragment key={key}>
+                <Col span={6}>
+                  <Text color={Color.secondary}>{StatMapping[key as Keys]}</Text>
+                </Col>
+                <Col span={6} style={{ textAlign: 'right' }}>
+                  <Text>{percentages.includes(key) ? `${round(value * 100)}%` : round(value)}</Text>
+                </Col>
+              </Fragment>
+            );
+          })}
+        </Row>
+      </Box>
+    </div>
+  );
+};
+
+const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: VoidFunction }) => {
+  return (
+    <Fragment>
+      <Text color={Color.secondary}>{stock.name}</Text>
+      <Box size={{ top: Size.LARGE }}>
+        <Row gutter={Size.LARGE}>
+          <Col span={8}>
+            <Row gutter={[Size.SMALL, Size.EXTRA_SMALL]}>
+              <Col span={6}>
+                <Text color={Color.secondary}>Sector</Text>
+              </Col>
+              <Col span={18}>
+                <Text color={getSectorColors(stock.profile.sector).default}>
+                  {stock.profile.sector}
+                </Text>
+              </Col>
+              <Col span={6}>
+                <Text color={Color.secondary}>Industry</Text>
+              </Col>
+              <Col span={18}>
+                <Text>{stock.profile.industry}</Text>
+              </Col>
+              <Col span={6}>
+                <Text color={Color.secondary}>Country</Text>
+              </Col>
+              <Col span={18}>
+                <Text>{stock.profile.country}</Text>
+              </Col>
+            </Row>
+          </Col>
+          <Col span={8}>
+            <Row gutter={Size.MEDIUM}>
+              <Col>
+                <Text>Fundamentals score:</Text>
+              </Col>
+              <Col>
+                <Typography.Link onClick={onClickViewAll} style={{ fontWeight: 'bold' }}>
+                  See all
+                </Typography.Link>
+              </Col>
+            </Row>
+            <Box size={{ top: Size.MEDIUM }}>
+              <StarsRating rating={5} />
+            </Box>
+          </Col>
+          <Col span={8}>
+            <Row
+              style={{ marginTop: -Size.SMALL }}
+              gutter={[Size.SMALL, Size.EXTRA_SMALL]}
+              align="middle">
+              <Col span={12}>
+                <Text color={Color.secondary}>Current price</Text>
+              </Col>
+              <Col span={12}>
+                <Text bold size={Size.LARGE}>
+                  ${round(stock.stats.currentPrice)}
+                </Text>
+              </Col>
+              <Col span={12}>
+                <Text color={Color.secondary}>Est. fair price</Text>
+              </Col>
+              <Col span={12}>
+                <Text bold size={Size.LARGE}>
+                  ${round(stock.fairPrice)}
+                </Text>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </Box>
+    </Fragment>
+  );
 };
 
 interface StockPanelProps {
@@ -69,10 +219,12 @@ interface StockPanelProps {
 
 export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => {
   const [stock, setStock] = useState<Stock | undefined>(_stock);
+  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     if (_stock != null) {
       setStock(_stock);
+      setStatsVisible(false);
     } else {
       setTimeout(() => setStock(undefined), 1000);
     }
@@ -104,75 +256,31 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
           </Col>
         </Row>
         <Box size={{ top: Size.EXTRA_SMALL }}>
-          <Text color={Color.secondary}>{stock.name}</Text>
-        </Box>
-        <Box size={{ top: Size.LARGE }}>
-          <Row gutter={Size.LARGE}>
-            <Col span={8}>
-              <Row gutter={[Size.SMALL, Size.EXTRA_SMALL]}>
-                <Col span={6}>
-                  <Text color={Color.secondary}>Sector</Text>
-                </Col>
-                <Col span={18}>
-                  <Text color={getSectorColors(stock.profile.sector).default}>
-                    {stock.profile.sector}
-                  </Text>
-                </Col>
-                <Col span={6}>
-                  <Text color={Color.secondary}>Industry</Text>
-                </Col>
-                <Col span={18}>
-                  <Text>{stock.profile.industry}</Text>
-                </Col>
-                <Col span={6}>
-                  <Text color={Color.secondary}>Country</Text>
-                </Col>
-                <Col span={18}>
-                  <Text>{stock.profile.country}</Text>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={8}>
-              <Row gutter={Size.MEDIUM}>
-                <Col>
-                  <Text>Fundamentals score:</Text>
-                </Col>
-                <Col>
-                  <Typography.Link style={{ fontWeight: 'bold' }}>See all</Typography.Link>
-                </Col>
-              </Row>
-              <Box size={{ top: Size.MEDIUM }}>
-                <StarsRating rating={5} />
-              </Box>
-            </Col>
-            <Col span={8}>
-              <Row
-                style={{ marginTop: -Size.SMALL }}
-                gutter={[Size.SMALL, Size.EXTRA_SMALL]}
-                align="middle">
-                <Col span={12}>
-                  <Text color={Color.secondary}>Current price</Text>
-                </Col>
-                <Col span={12}>
-                  <Text bold size={Size.LARGE}>
-                    ${stock.stats.currentPrice}
-                  </Text>
-                </Col>
-                <Col span={12}>
-                  <Text color={Color.secondary}>Est. fair price</Text>
-                </Col>
-                <Col span={12}>
-                  <Text bold size={Size.LARGE}>
-                    ${stock.fairPrice}
-                  </Text>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
+          <AnimatePresence exitBeforeEnter>
+            {statsVisible ? (
+              <motion.div
+                key="stats"
+                transition={{ duration: 0.8, ease: [0.86, 0, 0.07, 1] }}
+                initial={{ x: 50, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: 50, opacity: 0 }}>
+                <Stats stats={stock.stats} onClickBack={() => setStatsVisible(false)} />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="basicInfo"
+                transition={{ duration: 0.8, ease: [0.86, 0, 0.07, 1] }}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}>
+                <BasicInfo onClickViewAll={() => setStatsVisible(true)} stock={stock} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </Box>
       </div>
       <div className={styles.disclaimer}>
-        <Text light size={Size.MEDIUM - 3} color={Color.white}>
+        <Text light size={Size.MEDIUM - 3} color={getSectorColors(stock.profile.sector).default}>
           *Prices updated daily, fundamentals updated quarterly
         </Text>
       </div>
