@@ -1,6 +1,7 @@
-import { QuestionCircleFilled } from '@ant-design/icons';
+import { LoadingOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { css, injectGlobal } from '@emotion/css';
-import { Button, Col, Row, Tooltip } from 'antd';
+import { Button, Col, Row, Spin, Tooltip } from 'antd';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 import { AnimatedScrollContainer, Box, Logo, Panel, StockPanel, Title } from './components';
@@ -47,10 +48,15 @@ const styles = {
       background: rgba(255, 255, 255, 0.3) !important;
     }
   `,
+  loader: css`
+    width: 100%;
+    margin-top: ${Size.EXTRA_LARGE}px;
+    text-align: center;
+  `,
 };
 
 export const App = () => {
-  const { stocks = [] } = useFetchStocks();
+  const { isLoading, stocks = [] } = useFetchStocks();
   const [margin] = useState<number>(50);
   const [roi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
@@ -106,11 +112,28 @@ export const App = () => {
             active={activeStock != null}
             top={<StockPanel stock={activeStock} onClickClose={() => setActiveStock(undefined)} />}
             bottom={
-              <Panel
-                hidden={activeStock != null}
-                stocks={sortedStocks}
-                onClickStock={setActiveStock}
-              />
+              <AnimatePresence>
+                {isLoading ? (
+                  <div className={styles.loader}>
+                    <Spin
+                      style={{ color: Color.white }}
+                      indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />}
+                    />
+                  </div>
+                ) : (
+                  <motion.div
+                    style={{ height: '100%' }}
+                    transition={{ duration: 0.8, ease: [0.86, 0, 0.07, 1] }}
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}>
+                    <Panel
+                      hidden={activeStock != null}
+                      stocks={sortedStocks}
+                      onClickStock={setActiveStock}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             }
           />
         </div>
