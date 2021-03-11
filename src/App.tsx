@@ -57,14 +57,17 @@ const styles = {
 
 export const App = () => {
   const { isLoading, stocks = [] } = useFetchStocks();
-  const [margin] = useState<number>(50);
-  const [roi] = useState<number>(20);
+  const [margin] = useState<number>(30);
+  const [roi] = useState<number>(10);
   const [activeStock, setActiveStock] = useState<Stock>();
 
   const safety = 1 - margin / 100;
 
   const computedStocks = computeRankScores(roi / 100, safety, stocks);
-  const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
+  // const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedStocks = [...computedStocks].sort(
+    (a, b) => b.fundamentalsScore - a.fundamentalsScore,
+  );
 
   return (
     <div className={styles.app}>

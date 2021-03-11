@@ -194,7 +194,7 @@ const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: Vo
               </Col>
             </Row>
             <Box size={{ top: Size.MEDIUM }}>
-              <StarsRating rating={5} />
+              <StarsRating rating={Math.max(stock.fundamentalsScore, 0.1)} />
             </Box>
           </Col>
           <Col span={8}>

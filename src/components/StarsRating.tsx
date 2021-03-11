@@ -83,8 +83,8 @@ export const StarsRating = ({ rating }: StarsRatingProps) => {
       <div className={styles.stars}>
         <Stars />
       </div>
-      <div className={cx(styles.stars, styles.filled)} style={{ width: WIDTH * (rating * 0.2) }}>
-        <Stars width={rating * 0.2} />
+      <div className={cx(styles.stars, styles.filled)} style={{ width: WIDTH * rating }}>
+        <Stars width={rating} />
       </div>
     </div>
   );
