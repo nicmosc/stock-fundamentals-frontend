@@ -32,7 +32,7 @@ const styles = {
       top: 100%;
       left: 0;
       width: 100%;
-      height: 8px;
+      height: 10px;
       filter: blur(20px);
       opacity: 0.5;
       background: ${Color.gold.primary};

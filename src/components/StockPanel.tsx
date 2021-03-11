@@ -54,6 +54,12 @@ const styles = {
       background: ${Color.white};
     }
   `,
+  disclaimer: css`
+    position: absolute;
+    bottom: ${Size.MEDIUM}px;
+    right: ${Size.LARGE}px;
+    z-index: 2;
+  `,
 };
 
 interface StockPanelProps {
@@ -139,11 +145,37 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
                 <StarsRating rating={5} />
               </Box>
             </Col>
-            <Col span={8}>three</Col>
+            <Col span={8}>
+              <Row
+                style={{ marginTop: -Size.SMALL }}
+                gutter={[Size.SMALL, Size.EXTRA_SMALL]}
+                align="middle">
+                <Col span={12}>
+                  <Text color={Color.secondary}>Current price</Text>
+                </Col>
+                <Col span={12}>
+                  <Text bold size={Size.LARGE}>
+                    ${stock.stats.currentPrice}
+                  </Text>
+                </Col>
+                <Col span={12}>
+                  <Text color={Color.secondary}>Est. fair price</Text>
+                </Col>
+                <Col span={12}>
+                  <Text bold size={Size.LARGE}>
+                    ${stock.fairPrice}
+                  </Text>
+                </Col>
+              </Row>
+            </Col>
           </Row>
         </Box>
       </div>
-
+      <div className={styles.disclaimer}>
+        <Text light size={Size.MEDIUM - 3} color={Color.white}>
+          *Prices updated daily, fundamentals updated quarterly
+        </Text>
+      </div>
       <div className={styles.chart}>
         <TradingViewChart symbol={stock.symbol} sector={stock.profile.sector} />
       </div>
