@@ -1,18 +1,18 @@
-import { EllipsisOutlined } from '@ant-design/icons';
 import { css, cx } from '@emotion/css';
-import { Col, Popover, Row } from 'antd';
-import { Fragment } from 'react';
+import { Col, Row } from 'antd';
+import { CSSProperties, Fragment, useRef, useState } from 'react';
+import AutoSizer from 'react-virtualized-auto-sizer';
+import { FixedSizeList as List } from 'react-window';
 
 import { Stock } from '../types';
 import { ANIMATION_CURVE, ANIMATION_TIME, Color, Size, getSectorColors, round } from '../utils';
-import { Box } from './Box';
 import { Discount } from './Discount';
+import { SortBy } from './SortBy';
 import { Text } from './Text';
 
 const styles = {
   panel: css`
     position: relative;
-    padding: ${Size.EXTRA_LARGE}px calc(${Size.EXTRA_LARGE}px + ${Size.MEDIUM}px);
     border-radius: ${Size.EXTRA_LARGE}px;
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
@@ -80,43 +80,14 @@ const styles = {
       cursor: grab;
     }
   `,
-  moreIcon: css`
-    color: ${Color.tertiary};
 
-    path {
-      stroke: ${Color.tertiary};
-      stroke-width: 70;
-    }
-
-    &:hover {
-      cursor: pointer;
-      color: ${Color.secondary};
-
-      path {
-        stroke: ${Color.secondary};
-      }
-    }
-  `,
-  option: css`
-    border-radius: ${Size.EXTRA_SMALL}px;
-
-    &:hover {
-      cursor: pointer;
-      background: ${Color.grey[2]};
-    }
-  `,
   table: css`
-    display: table;
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 ${Size.EXTRA_LARGE}px;
+    padding-bottom: ${Size.EXTRA_LARGE * 3}px;
   `,
   row: css`
-    display: table-row;
-    width: 100%;
-    padding-bottom: ${Size.LARGE}px;
     white-space: nowrap;
     transition: all 0.1s ease-in-out;
+    width: calc(100% - ${Size.EXTRA_LARGE * 2}px);
 
     &:hover {
       cursor: pointer;
@@ -125,69 +96,18 @@ const styles = {
       border-radius: ${Size.EXTRA_SMALL}px;
     }
   `,
-  cell: css`
-    display: table-cell;
-    vertical-align: middle;
+  loader: css`
+    height: 40px;
+    width: 100%;
+    border-radius: ${Size.SMALL}px;
+    background: ${Color.grey[2]};
   `,
-};
-
-const SortBy = () => {
-  return (
-    <Popover
-      placement="bottomRight"
-      arrowPointAtCenter
-      trigger="click"
-      overlayInnerStyle={{
-        color: Color.primary,
-        padding: 0,
-        borderRadius: Size.SMALL,
-      }}
-      content={
-        <div>
-          <Box size={{ bottom: Size.SMALL, left: Size.MEDIUM, right: Size.MEDIUM }}>
-            <Text color={Color.secondary}>Sort by</Text>
-          </Box>
-          <div className={styles.option}>
-            <Box
-              inset
-              size={{
-                right: Size.MEDIUM,
-                left: Size.MEDIUM,
-                bottom: Size.EXTRA_SMALL,
-                top: Size.EXTRA_SMALL,
-              }}>
-              <Text light>Alphabetical Order</Text>
-            </Box>
-          </div>
-          <div className={styles.option}>
-            <Box
-              inset
-              size={{
-                right: Size.MEDIUM,
-                left: Size.MEDIUM,
-                bottom: Size.EXTRA_SMALL,
-                top: Size.EXTRA_SMALL,
-              }}>
-              <Text light>Largest disconut</Text>
-            </Box>
-          </div>
-          <div className={styles.option}>
-            <Box
-              inset
-              size={{
-                right: Size.MEDIUM,
-                left: Size.MEDIUM,
-                bottom: Size.EXTRA_SMALL,
-                top: Size.EXTRA_SMALL,
-              }}>
-              <Text light>Fundamentals Score</Text>
-            </Box>
-          </div>
-        </div>
-      }>
-      <EllipsisOutlined className={styles.moreIcon} style={{ fontSize: Size.LARGE }} />
-    </Popover>
-  );
+  sortBy: css`
+    position: absolute;
+    top: ${Size.LARGE}px;
+    right: ${Size.EXTRA_LARGE}px;
+    z-index: 9;
+  `,
 };
 
 interface PanelProps {
@@ -197,65 +117,138 @@ interface PanelProps {
 }
 
 export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
+  const prevScrollOffset = useRef<number>(0);
+  const timeout = useRef<NodeJS.Timeout>();
+  const showLoading = useRef(false);
+  const [showSortBy, setShowSortBy] = useState(true);
+
+  const handleScroll = ({ scrollOffset }: { scrollOffset: number }) => {
+    if (timeout.current != null) {
+      clearTimeout(timeout.current);
+    }
+
+    if (scrollOffset > 50 && showSortBy) {
+      setShowSortBy(false);
+    } else if (scrollOffset < 50 && !showSortBy) {
+      setShowSortBy(true);
+    }
+
+    const delta = Math.abs(prevScrollOffset.current - scrollOffset);
+    prevScrollOffset.current = scrollOffset;
+    if (delta > 400) {
+      showLoading.current = true;
+    }
+
+    timeout.current = setTimeout(function () {
+      showLoading.current = false;
+    }, 500);
+  };
+
   return (
     <Fragment>
       <div className={styles.dragIcon} data-element="handle" />
-      <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
-        <Row justify="end">
-          <Col>
-            <SortBy />
-          </Col>
-        </Row>
-        <div className={styles.table}>
-          {stocks.map((stock) => (
-            <Row
-              onClick={() => onClickStock(stock)}
-              className={styles.row}
-              gutter={Size.MEDIUM}
-              key={stock.symbol}
-              align="middle"
-              justify="space-between">
-              <Col className={styles.cell}>
-                <Text bold size={Size.LARGE}>
-                  {stock.symbol}
-                </Text>
-              </Col>
-              <Col
-                className={styles.cell}
-                style={{
-                  maxWidth: 200,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  color: Color.tertiary,
-                }}>
-                <Text color={Color.tertiary}>{stock.name}</Text>
-              </Col>
-              <Col className={styles.cell}>
-                <Text color={getSectorColors(stock.profile.sector).default}>
-                  {stock.profile.sector}
-                </Text>
-              </Col>
-              <Col className={styles.cell} style={{ textAlign: 'right' }}>
-                <Text color={Color.tertiary}>
-                  Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
-                </Text>
-              </Col>
-              <Col className={styles.cell} style={{ textAlign: 'right' }}>
-                <Text bold size={Size.LARGE}>
-                  ${round(stock.stats.currentPrice)}
-                </Text>
-              </Col>
-              <Col className={styles.cell}>
-                <Box size={{ left: Size.SMALL }}>
-                  <Discount
-                    amount={Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100)}
-                  />
-                </Box>
-              </Col>
-            </Row>
-          ))}
+      {showSortBy ? (
+        <div className={styles.sortBy}>
+          <SortBy />
         </div>
+      ) : null}
+      <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              useIsScrolling
+              className={styles.table}
+              height={height - (60 + Size.MEDIUM) * 4}
+              itemCount={stocks.length}
+              itemSize={60 + Size.MEDIUM * 2}
+              onScroll={handleScroll}
+              width={width}>
+              {({
+                index,
+                style,
+                isScrolling,
+              }: {
+                index: number;
+                style: CSSProperties;
+                isScrolling?: boolean;
+              }) => {
+                const stock = stocks[index];
+                return (
+                  <Row
+                    style={{
+                      ...style,
+                      width: (style.width as number) - Size.EXTRA_LARGE,
+                      left: (style.left as number) + Size.EXTRA_LARGE,
+                      top: (style.top as number) + Size.EXTRA_LARGE * 2,
+                      height: (style.height as number) - Size.LARGE,
+                      marginLeft: 0,
+                      marginRight: 0,
+                    }}
+                    onClick={() => onClickStock(stock)}
+                    className={styles.row}
+                    gutter={Size.MEDIUM}
+                    key={stock.symbol}
+                    align="middle"
+                    justify="space-between">
+                    {isScrolling && showLoading.current ? (
+                      <Fragment>
+                        <Col span={3}>
+                          <Text bold size={Size.LARGE}>
+                            {stock.symbol}
+                          </Text>
+                        </Col>
+                        <Col span={21}>
+                          <div className={styles.loader} />
+                        </Col>
+                      </Fragment>
+                    ) : (
+                      <Fragment>
+                        <Col span={3}>
+                          <Text bold size={Size.LARGE}>
+                            {stock.symbol}
+                          </Text>
+                        </Col>
+                        <Col
+                          span={6}
+                          style={{
+                            maxWidth: 200,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            color: Color.tertiary,
+                          }}>
+                          <Text color={Color.tertiary}>{stock.name}</Text>
+                        </Col>
+                        <Col span={5}>
+                          <Text color={getSectorColors(stock.profile.sector).default}>
+                            {stock.profile.sector}
+                          </Text>
+                        </Col>
+                        <Col span={4} style={{ textAlign: 'right' }}>
+                          <Text color={Color.tertiary}>
+                            Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
+                          </Text>
+                        </Col>
+                        <Col span={4} style={{ textAlign: 'right' }}>
+                          <Text bold size={Size.LARGE}>
+                            ${round(stock.stats.currentPrice)}
+                          </Text>
+                        </Col>
+                        <Col span={2}>
+                          <Discount
+                            amount={Math.round(
+                              (1 - stock.stats.currentPrice / stock.fairPrice) * 100,
+                            )}
+                          />
+                        </Col>
+                      </Fragment>
+                    )}
+                  </Row>
+                );
+              }}
+            </List>
+          )}
+        </AutoSizer>
       </div>
     </Fragment>
   );
