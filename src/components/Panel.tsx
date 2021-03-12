@@ -106,17 +106,19 @@ const styles = {
     }
   `,
   table: css`
-    display: table;
+    /* display: table; */
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 ${Size.EXTRA_LARGE}px;
+    /* border-collapse: separate; */
+    /* border-spacing: 0 ${Size.EXTRA_LARGE}px; */
   `,
   row: css`
-    display: table-row;
+    /* display: table-row; */
     width: 100%;
-    padding-bottom: ${Size.LARGE}px;
+    /* padding-bottom: ${Size.LARGE}px; */
     white-space: nowrap;
     transition: all 0.1s ease-in-out;
+    height: 60px;
+    margin: ${Size.LARGE}px 0;
 
     &:hover {
       cursor: pointer;
@@ -126,8 +128,8 @@ const styles = {
     }
   `,
   cell: css`
-    display: table-cell;
-    vertical-align: middle;
+    /* display: table-cell; */
+    /* vertical-align: middle; */
   `,
 };
 
@@ -215,12 +217,13 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
               key={stock.symbol}
               align="middle"
               justify="space-between">
-              <Col className={styles.cell}>
+              <Col span={3} className={styles.cell}>
                 <Text bold size={Size.LARGE}>
                   {stock.symbol}
                 </Text>
               </Col>
               <Col
+                span={6}
                 className={styles.cell}
                 style={{
                   maxWidth: 200,
@@ -231,22 +234,22 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
                 }}>
                 <Text color={Color.tertiary}>{stock.name}</Text>
               </Col>
-              <Col className={styles.cell}>
+              <Col span={5} className={styles.cell}>
                 <Text color={getSectorColors(stock.profile.sector).default}>
                   {stock.profile.sector}
                 </Text>
               </Col>
-              <Col className={styles.cell} style={{ textAlign: 'right' }}>
+              <Col span={4} className={styles.cell} style={{ textAlign: 'right' }}>
                 <Text color={Color.tertiary}>
                   Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
                 </Text>
               </Col>
-              <Col className={styles.cell} style={{ textAlign: 'right' }}>
+              <Col span={4} className={styles.cell} style={{ textAlign: 'right' }}>
                 <Text bold size={Size.LARGE}>
                   ${round(stock.stats.currentPrice)}
                 </Text>
               </Col>
-              <Col className={styles.cell}>
+              <Col span={2} className={styles.cell}>
                 <Box size={{ left: Size.SMALL }}>
                   <Discount
                     amount={Math.round((1 - stock.stats.currentPrice / stock.fairPrice) * 100)}
