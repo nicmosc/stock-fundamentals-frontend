@@ -283,7 +283,7 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
             {statsVisible ? (
               <motion.div
                 key="stats"
-                transition={{ duration: 0.8, ease: [0.86, 0, 0.07, 1] }}
+                transition={{ duration: 0.4, ease: [0.86, 0, 0.07, 1] }}
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: 50, opacity: 0 }}>
@@ -292,7 +292,7 @@ export const StockPanel = ({ stock: _stock, onClickClose }: StockPanelProps) => 
             ) : (
               <motion.div
                 key="basicInfo"
-                transition={{ duration: 0.8, ease: [0.86, 0, 0.07, 1] }}
+                transition={{ duration: 0.4, ease: [0.86, 0, 0.07, 1] }}
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}>
