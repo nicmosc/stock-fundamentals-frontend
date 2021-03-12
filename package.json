@@ -64,6 +64,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "@types/react-window": "^1.8.2",
     "@types/url-join": "^4.0.0",
     "eslint": "^7.21.0",
     "eslint-formatter-pretty": "^4.0.0",
