@@ -30,6 +30,7 @@ export interface StockFromServer {
     est10YearEPS: number;
     est10thYearPrice: number;
     currentPrice: number;
+    [key: string]: number | undefined;
   };
 }
 

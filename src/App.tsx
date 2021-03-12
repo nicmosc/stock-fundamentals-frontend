@@ -57,8 +57,8 @@ const styles = {
 
 export const App = () => {
   const { isLoading, stocks = [] } = useFetchStocks();
-  const [margin] = useState<number>(30);
-  const [roi] = useState<number>(10);
+  const [margin] = useState<number>(50);
+  const [roi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
 
   const safety = 1 - margin / 100;

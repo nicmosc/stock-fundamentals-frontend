@@ -27,44 +27,41 @@ function computeFairPrice(
 const ranges = {
   debtToEquity: {
     // Higher is worse
-    worst: 2,
+    worst: 4,
     best: 0.2,
   },
   revenueGrowth: {
-    // Higher is better (2 = 200% growth)
     worst: 0.1,
-    best: 2,
+    best: 0.5,
   },
   growthRate: {
     worst: 0.1,
-    best: 1,
+    best: 0.5,
   },
   profitMargin: {
-    // Higher is better (1 = 100% profit margins)
     worst: 0,
-    best: 1,
+    best: 0.5,
   },
   FCFYield: {
-    // Higher is better (below 0 = no revenue, 1 = 100%)
     worst: 0,
-    best: 1,
+    best: 0.5,
   },
   ROIC: {
-    // Higher is better (1 = 100% return on invested capital)
     worst: 0,
-    best: 1,
+    best: 0.3,
   },
 };
 
-const weights = {
+const weights: { [x: string]: number } = {
   ROIC: 1,
-  revenueGrowth: 1,
-  growthRate: 1,
-  profitMargin: 1,
+  revenueGrowth: 2,
+  growthRate: 2,
+  profitMargin: 3,
   FCFYield: 1,
   debtToEquity: 1,
 };
-const totalWeights = Object.values(weights).reduce((w, m) => w + m, 0);
+
+const totalWeights = Object.values(weights).reduce((m, w) => m + w, 0);
 
 function computeFundamentalsScore(stats: StockFromServer['stats']): number {
   const {
@@ -75,23 +72,29 @@ function computeFundamentalsScore(stats: StockFromServer['stats']): number {
     FCFYield = (ranges.FCFYield.best + ranges.FCFYield.worst) / 2,
     debtToEquity = (ranges.debtToEquity.best + ranges.debtToEquity.worst) / 2,
   } = stats;
+
+  const debtToEquityScore =
+    (1 -
+      normalize(
+        debtToEquity <= 0 ? 4 : debtToEquity,
+        ranges.debtToEquity.worst,
+        ranges.debtToEquity.best,
+      )) *
+    (weights.debtToEquity / totalWeights);
   const ROICScore =
-    normalize(ROIC, ranges.ROIC.worst, ranges.ROIC.best) * (weights.ROIC / totalWeights);
+    normalize(ROIC, ranges.ROIC.best, ranges.ROIC.worst) * (weights.ROIC / totalWeights);
   const revenueGrowthScore =
-    normalize(revenueGrowth, ranges.revenueGrowth.worst, ranges.revenueGrowth.best) *
+    normalize(revenueGrowth, ranges.revenueGrowth.best, ranges.revenueGrowth.worst) *
     (weights.revenueGrowth / totalWeights);
   const growthRateScore =
-    normalize(growthRate, ranges.growthRate.worst, ranges.growthRate.best) *
+    normalize(growthRate, ranges.growthRate.best, ranges.growthRate.worst) *
     (weights.growthRate / totalWeights);
   const profitMarginScore =
-    normalize(profitMargin, ranges.profitMargin.worst, ranges.profitMargin.best) *
+    normalize(profitMargin, ranges.profitMargin.best, ranges.profitMargin.worst) *
     (weights.profitMargin / totalWeights);
   const FCFYieldScore =
-    normalize(FCFYield, ranges.FCFYield.worst, ranges.FCFYield.best) *
+    normalize(FCFYield, ranges.FCFYield.best, ranges.FCFYield.worst) *
     (weights.FCFYield / totalWeights);
-  const debtToEquityScore =
-    normalize(debtToEquity, ranges.debtToEquity.worst, ranges.debtToEquity.best) *
-    (weights.debtToEquity / totalWeights);
   return (
     ROICScore +
     revenueGrowthScore +
