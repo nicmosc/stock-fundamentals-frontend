@@ -5,8 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 import { AnimatedScrollContainer, Box, Logo, Panel, StockPanel, Title } from './components';
+import { SortByEnum } from './components/SortBy';
 import { Stock } from './types';
-import { Color, Size, computeRankScores, useFetchStocks } from './utils';
+import { Color, Size, ValueOf, computeRankScores, useFetchStocks } from './utils';
 
 injectGlobal`
   html, body {
@@ -60,14 +61,20 @@ export const App = () => {
   const [margin] = useState<number>(50);
   const [roi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
+  const [sortBy, setSortBy] = useState<ValueOf<typeof SortByEnum>>(SortByEnum.ALPHABETICAL);
 
   const safety = 1 - margin / 100;
 
   const computedStocks = computeRankScores(roi / 100, safety, stocks);
-  // const sortedStocks = [...computedStocks].sort((a, b) => a.name.localeCompare(b.name));
-  const sortedStocks = [...computedStocks].sort(
-    (a, b) => b.fundamentalsScore - a.fundamentalsScore,
-  );
+  const sortedStocks = [...computedStocks].sort((a, b) => {
+    if (sortBy === SortByEnum.FUNDAMENTALS) {
+      return b.fundamentalsScore - a.fundamentalsScore;
+    } else if (sortBy === SortByEnum.DISCOUNT) {
+      return a.discountScore - b.discountScore;
+    } else {
+      return a.name.localeCompare(b.name);
+    }
+  });
 
   return (
     <div className={styles.app}>
@@ -132,6 +139,7 @@ export const App = () => {
                     initial={{ y: 100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}>
                     <Panel
+                      onChangeSort={setSortBy}
                       hidden={activeStock != null}
                       stocks={sortedStocks}
                       onClickStock={setActiveStock}

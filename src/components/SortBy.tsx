@@ -2,7 +2,7 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { Popover } from 'antd';
 
-import { Color, Size } from '../utils';
+import { Color, Size, ValueOf } from '../utils';
 import { Box } from './Box';
 import { Text } from './Text';
 
@@ -34,7 +34,17 @@ const styles = {
   `,
 };
 
-export const SortBy = () => {
+export const SortByEnum = {
+  ALPHABETICAL: 'ALPHABETICAL',
+  DISCOUNT: 'DISCOUNT',
+  FUNDAMENTALS: 'FUNDAMENTALS',
+};
+
+interface SortByProps {
+  onChange: (sort: ValueOf<typeof SortByEnum>) => void;
+}
+
+export const SortBy = ({ onChange }: SortByProps) => {
   return (
     <Popover
       placement="bottomRight"
@@ -50,7 +60,7 @@ export const SortBy = () => {
           <Box size={{ bottom: Size.SMALL, left: Size.MEDIUM, right: Size.MEDIUM }}>
             <Text color={Color.secondary}>Sort by</Text>
           </Box>
-          <div className={styles.option}>
+          <div onClick={() => onChange(SortByEnum.ALPHABETICAL)} className={styles.option}>
             <Box
               inset
               size={{
@@ -62,7 +72,7 @@ export const SortBy = () => {
               <Text light>Alphabetical Order</Text>
             </Box>
           </div>
-          <div className={styles.option}>
+          <div onClick={() => onChange(SortByEnum.DISCOUNT)} className={styles.option}>
             <Box
               inset
               size={{
@@ -74,7 +84,7 @@ export const SortBy = () => {
               <Text light>Largest disconut</Text>
             </Box>
           </div>
-          <div className={styles.option}>
+          <div onClick={() => onChange(SortByEnum.FUNDAMENTALS)} className={styles.option}>
             <Box
               inset
               size={{

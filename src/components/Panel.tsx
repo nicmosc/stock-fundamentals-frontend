@@ -5,9 +5,17 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
 
 import { Stock } from '../types';
-import { ANIMATION_CURVE, ANIMATION_TIME, Color, Size, getSectorColors, round } from '../utils';
+import {
+  ANIMATION_CURVE,
+  ANIMATION_TIME,
+  Color,
+  Size,
+  ValueOf,
+  getSectorColors,
+  round,
+} from '../utils';
 import { Discount } from './Discount';
-import { SortBy } from './SortBy';
+import { SortBy, SortByEnum } from './SortBy';
 import { Text } from './Text';
 
 const styles = {
@@ -114,9 +122,10 @@ interface PanelProps {
   stocks: Array<Stock>;
   onClickStock: (stock: Stock) => void;
   hidden: boolean;
+  onChangeSort: (sort: ValueOf<typeof SortByEnum>) => void;
 }
 
-export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
+export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps) => {
   const prevScrollOffset = useRef<number>(0);
   const timeout = useRef<NodeJS.Timeout>();
   const showLoading = useRef(false);
@@ -149,7 +158,7 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
       <div className={styles.dragIcon} data-element="handle" />
       {showSortBy ? (
         <div className={styles.sortBy}>
-          <SortBy />
+          <SortBy onChange={onChangeSort} />
         </div>
       ) : null}
       <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
