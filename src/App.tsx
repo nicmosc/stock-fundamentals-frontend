@@ -101,7 +101,9 @@ export const App = () => {
               padding: Size.MEDIUM,
               borderRadius: Size.SMALL,
             }}>
-            <QuestionCircleFilled style={{ fontSize: Size.MEDIUM, cursor: 'pointer' }} />
+            <QuestionCircleFilled
+              style={{ fontSize: Size.MEDIUM, cursor: 'pointer', transform: 'translateY(-2px)' }}
+            />
           </Tooltip>
         </Title>
       </Box>

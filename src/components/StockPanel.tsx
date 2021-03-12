@@ -1,6 +1,6 @@
-import { LeftOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { InfoCircleFilled, LeftOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { css, cx } from '@emotion/css';
-import { Col, Row, Spin, Typography } from 'antd';
+import { Col, Row, Spin, Tooltip, Typography } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useState } from 'react';
 
@@ -186,6 +186,24 @@ const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: Vo
             <Row gutter={Size.MEDIUM}>
               <Col>
                 <Text>Fundamentals score:</Text>
+                <Tooltip
+                  title="Each fundamental parameter is given a weight and a weighted average is computed. More importance is given to profit margins and profit/revenue growth."
+                  placement="top"
+                  color={Color.white}
+                  overlayInnerStyle={{
+                    color: Color.primary,
+                    padding: Size.MEDIUM,
+                    borderRadius: Size.SMALL,
+                  }}>
+                  <InfoCircleFilled
+                    style={{
+                      color: Color.tertiary,
+                      fontSize: Size.MEDIUM,
+                      cursor: 'pointer',
+                      marginLeft: Size.EXTRA_SMALL,
+                    }}
+                  />
+                </Tooltip>
               </Col>
               <Col>
                 <Typography.Link onClick={onClickViewAll} style={{ fontWeight: 'bold' }}>
@@ -212,6 +230,24 @@ const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: Vo
               </Col>
               <Col span={12}>
                 <Text color={Color.secondary}>Est. fair price</Text>
+                <Tooltip
+                  title="This price is calculated depending on the given settings, and may vary greatly given different parameters"
+                  placement="top"
+                  color={Color.white}
+                  overlayInnerStyle={{
+                    color: Color.primary,
+                    padding: Size.MEDIUM,
+                    borderRadius: Size.SMALL,
+                  }}>
+                  <InfoCircleFilled
+                    style={{
+                      color: Color.tertiary,
+                      fontSize: Size.MEDIUM,
+                      cursor: 'pointer',
+                      marginLeft: Size.EXTRA_SMALL,
+                    }}
+                  />
+                </Tooltip>
               </Col>
               <Col span={12}>
                 <Text bold size={Size.LARGE}>
