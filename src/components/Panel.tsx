@@ -1,7 +1,7 @@
 import { EllipsisOutlined } from '@ant-design/icons';
 import { css, cx } from '@emotion/css';
 import { Col, Popover, Row } from 'antd';
-import { CSSProperties, Fragment, useRef } from 'react';
+import { CSSProperties, Fragment, useRef, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
 
@@ -123,6 +123,18 @@ const styles = {
       border-radius: ${Size.EXTRA_SMALL}px;
     }
   `,
+  loader: css`
+    height: 40px;
+    width: 100%;
+    border-radius: ${Size.SMALL}px;
+    background: ${Color.grey[2]};
+  `,
+  sortBy: css`
+    position: absolute;
+    top: ${Size.LARGE}px;
+    right: ${Size.EXTRA_LARGE}px;
+    z-index: 9;
+  `,
 };
 
 const SortBy = () => {
@@ -191,17 +203,42 @@ interface PanelProps {
 }
 
 export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
-  const scrollDelta = useRef<number>(0);
-  const prevScrollOffset = useRef<number>();
+  const prevScrollOffset = useRef<number>(0);
+  const timeout = useRef<NodeJS.Timeout>();
+  const showLoading = useRef(false);
+  const [showSortBy, setShowSortBy] = useState(true);
+
+  const handleScroll = ({ scrollOffset }: { scrollOffset: number }) => {
+    if (timeout.current != null) {
+      clearTimeout(timeout.current);
+    }
+
+    if (scrollOffset > 50 && showSortBy) {
+      setShowSortBy(false);
+    } else if (scrollOffset < 50 && !showSortBy) {
+      setShowSortBy(true);
+    }
+
+    const delta = Math.abs(prevScrollOffset.current - scrollOffset);
+    prevScrollOffset.current = scrollOffset;
+    if (delta > 400) {
+      showLoading.current = true;
+    }
+
+    timeout.current = setTimeout(function () {
+      showLoading.current = false;
+    }, 500);
+  };
+
   return (
     <Fragment>
       <div className={styles.dragIcon} data-element="handle" />
+      {showSortBy ? (
+        <div className={styles.sortBy}>
+          <SortBy />
+        </div>
+      ) : null}
       <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
-        {/* <Row justify="end">
-          <Col>
-            <SortBy />
-          </Col>
-        </Row> */}
         <AutoSizer>
           {({ height, width }) => (
             <List
@@ -210,14 +247,7 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
               height={height - (60 + Size.MEDIUM) * 4}
               itemCount={stocks.length}
               itemSize={60 + Size.MEDIUM * 2}
-              onScroll={({ scrollOffset }) => {
-                const delta =
-                  prevScrollOffset.current == null
-                    ? 0
-                    : Math.abs(prevScrollOffset.current - scrollOffset);
-                prevScrollOffset.current = scrollOffset;
-                scrollDelta.current = delta;
-              }}
+              onScroll={handleScroll}
               width={width}>
               {({
                 index,
@@ -246,14 +276,16 @@ export const Panel = ({ stocks, onClickStock, hidden }: PanelProps) => {
                     key={stock.symbol}
                     align="middle"
                     justify="space-between">
-                    {isScrolling && scrollDelta.current > 100 ? (
+                    {isScrolling && showLoading.current ? (
                       <Fragment>
                         <Col span={3}>
                           <Text bold size={Size.LARGE}>
                             {stock.symbol}
                           </Text>
                         </Col>
-                        <Col span={21}>Loading</Col>
+                        <Col span={21}>
+                          <div className={styles.loader} />
+                        </Col>
                       </Fragment>
                     ) : (
                       <Fragment>
