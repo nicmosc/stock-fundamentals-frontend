@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { StockFromServer } from '../types';
+import { StockFromServer } from '../../types';
 import { useFetchData } from './use-fetch-data';
 
 export function useFetchStocks(): {
