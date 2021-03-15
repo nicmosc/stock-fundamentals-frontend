@@ -1,16 +1,12 @@
 import { css } from '@emotion/css';
 
-import { Color, Size } from '../utils';
-import { Box } from './Box';
+import { Color, Size } from '../../utils';
+import { Box } from '../Box';
+import { Text } from '../Text';
+import { Title } from '../Title';
 import { Slider } from './Slider';
-import { Text } from './Text';
-import { Title } from './Title';
 
 const styles = {
-  settings: css`
-    height: 100%;
-    width: 100%;
-  `,
   gradientText: css`
     display: inline-block;
     position: relative;
@@ -41,16 +37,15 @@ const styles = {
   `,
 };
 
-interface SettingsProps {
-  roi: number;
-  onChangeRoi: (roi: number) => void;
-  margin: number;
-  onChangeMargin: (margin: number) => void;
+interface ROIProps {
+  value: number;
+  onChange: (value: number) => void;
+  onConfirm: VoidFunction;
 }
 
-export const Settings = ({ roi, onChangeRoi }: SettingsProps) => {
+export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
   return (
-    <div className={styles.settings}>
+    <div>
       <Title inversed={false} level={1} align="center">
         First, adjust your desired rate of return.
       </Title>
@@ -59,12 +54,12 @@ export const Settings = ({ roi, onChangeRoi }: SettingsProps) => {
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
-          <Text size={Size.EXTRA_LARGE * 2}>+{roi}</Text>
+          <Text size={Size.EXTRA_LARGE * 2}>+{value}</Text>
           <Text size={Size.EXTRA_LARGE}>%</Text>
         </div>
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ display: 'flex', justifyContent: 'center' }}>
-        <Slider value={roi} onChange={onChangeRoi} />
+        <Slider value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
     </div>
   );

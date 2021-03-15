@@ -73,7 +73,7 @@ export const App = () => {
   const [roi, setRoi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
   const [sortBy, setSortBy] = useState<ValueOf<typeof SortByEnum>>(SortByEnum.ALPHABETICAL);
-  const [isSettingsVisible] = useState(true);
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
 
   const safety = 1 - margin / 100;
 
@@ -99,7 +99,7 @@ export const App = () => {
         {!isSettingsVisible ? (
           <Col>
             <Box size={Size.LARGE} inset>
-              <Button ghost className={styles.button}>
+              <Button onClick={() => setIsSettingsVisible(true)} ghost className={styles.button}>
                 Adjust settings
               </Button>
             </Box>
@@ -107,7 +107,13 @@ export const App = () => {
         ) : null}
       </Row>
       {isSettingsVisible ? (
-        <Settings roi={roi} onChangeMargin={setMargin} margin={margin} onChangeRoi={setRoi} />
+        <Settings
+          onClickClose={() => setIsSettingsVisible(false)}
+          roi={roi}
+          onChangeMargin={setMargin}
+          margin={margin}
+          onChangeRoi={setRoi}
+        />
       ) : (
         <Fragment>
           <Box size={Size.LARGE}>

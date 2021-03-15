@@ -1,11 +1,11 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Color, Size } from '../utils';
-import { Box } from './Box';
-import { Text } from './Text';
+import { Color, Size } from '../../utils';
+import { Box } from '../Box';
+import { Text } from '../Text';
 
 const HANDLE_WIDTH = 50;
 const SLIDER_WIDTH = 300;
@@ -72,9 +72,11 @@ const styles = {
 interface SliderProps {
   value: number;
   onChange: (value: number) => void;
+  onConfirm: VoidFunction;
 }
 
-export const Slider = ({ value, onChange }: SliderProps) => {
+export const Slider = ({ value, onChange, onConfirm }: SliderProps) => {
+  const [canConfirm, setCanConfirm] = useState(true);
   const x = useMotionValue(value);
   const _width = useTransform(x, (value) => value / 3);
   const width = useMotionTemplate`${_width}%`;
@@ -100,6 +102,13 @@ export const Slider = ({ value, onChange }: SliderProps) => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.4, ease: [0.86, 0, 0.07, 1] }}
+          onDragStart={() => setCanConfirm(false)}
+          onDragEnd={() => {
+            setTimeout(() => {
+              setCanConfirm(true);
+            }, 500);
+          }}
+          onClick={canConfirm ? onConfirm : undefined}
           dragConstraints={{
             top: 0,
             left: -HANDLE_WIDTH / 2,
