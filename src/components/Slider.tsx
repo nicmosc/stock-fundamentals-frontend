@@ -1,30 +1,71 @@
+import { CheckOutlined } from '@ant-design/icons';
 import { css } from '@emotion/css';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect } from 'react';
 
-const HANDLE_WIDTH = 30;
+import { Color, Size } from '../utils';
+import { Box } from './Box';
+import { Text } from './Text';
+
+const HANDLE_WIDTH = 50;
 const SLIDER_WIDTH = 300;
 
 const styles = {
   slider: css`
     position: relative;
     width: ${SLIDER_WIDTH + HANDLE_WIDTH / 2}px;
-    background: blue;
+  `,
+  backgroundTrack: css`
+    width: 100%;
+    height: 10px;
+    background: ${Color.grey[2]};
+    border-radius: ${Size.LARGE}px;
   `,
   filledTrack: css`
     position: absolute;
     left: 0;
     top: 0;
     height: 100%;
-    background: green;
     z-index: 1;
+    height: 10px;
+    border-radius: ${Size.LARGE}px;
+    background: linear-gradient(
+      270deg,
+      ${Color.volcano.primary} 2.49%,
+      ${Color.orange.primary} 107.46%
+    );
+    box-shadow: 0px 4px 8px rgba(255, 100, 38, 0.4);
+
+    &::before {
+      content: ' ';
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 15px;
+      filter: blur(40px);
+      opacity: 0.4;
+      background: ${Color.volcano.primary};
+      z-index: 0;
+    }
   `,
   handle: css`
-    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: ${HANDLE_WIDTH}px;
-    background: red;
-    position: relative;
+    height: 30px;
+    background: ${Color.white};
+    position: absolute;
+    left: 0;
+    top: -10px;
     z-index: 2;
+    border-radius: ${Size.LARGE}px;
+    box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.15), 0px 9px 23px -1px rgba(0, 11, 49, 0.05);
+
+    &:hover {
+      cursor: pointer;
+    }
   `,
 };
 
@@ -47,21 +88,39 @@ export const Slider = ({ value, onChange }: SliderProps) => {
   );
 
   return (
-    <div className={styles.slider}>
-      <motion.div
-        className={styles.handle}
-        drag="x"
-        style={{ x }}
-        dragElastic={0}
-        dragTransition={{ power: 0 }}
-        dragConstraints={{
-          top: 0,
-          left: -HANDLE_WIDTH / 2,
-          right: SLIDER_WIDTH,
-          bottom: 0,
-        }}
-      />
-      <motion.div className={styles.filledTrack} style={{ width }} />
+    <div>
+      <div className={styles.slider}>
+        <div className={styles.backgroundTrack} />
+        <motion.div
+          className={styles.handle}
+          drag="x"
+          style={{ x }}
+          dragElastic={0}
+          dragTransition={{ power: 0 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.4, ease: [0.86, 0, 0.07, 1] }}
+          dragConstraints={{
+            top: 0,
+            left: -HANDLE_WIDTH / 2,
+            right: SLIDER_WIDTH,
+            bottom: 0,
+          }}>
+          <CheckOutlined
+            style={{
+              color: Color.volcano.primary,
+              strokeWidth: 100,
+              stroke: Color.volcano.primary,
+            }}
+          />
+        </motion.div>
+        <motion.div className={styles.filledTrack} style={{ width }} />
+      </div>
+      <Box size={{ top: Size.LARGE }} style={{ textAlign: 'center' }}>
+        <Text light color={Color.tertiary}>
+          Click to confirm
+        </Text>
+      </Box>
     </div>
   );
 };

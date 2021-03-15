@@ -52,10 +52,10 @@ export const Settings = ({ roi, onChangeRoi }: SettingsProps) => {
   return (
     <div className={styles.settings}>
       <Title inversed={false} level={1} align="center">
-        First, adjust your desired rate of return
+        First, adjust your desired rate of return.
       </Title>
       <Box size={Size.LARGE} style={{ textAlign: 'center' }}>
-        <Text>Over the next 10 years, year over year</Text>
+        <Text>Over the next 10 years, year over year. Recommended: 10-30.</Text>
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
