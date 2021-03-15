@@ -106,7 +106,7 @@ export const Slider = ({ value, onChange, onConfirm }: SliderProps) => {
           onDragEnd={() => {
             setTimeout(() => {
               setCanConfirm(true);
-            }, 500);
+            }, 200);
           }}
           onClick={canConfirm ? onConfirm : undefined}
           dragConstraints={{

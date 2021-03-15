@@ -4,6 +4,7 @@ import { Color, Size } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
+import { AnimatedChart } from './AnimatedChart';
 import { Slider } from './Slider';
 
 const styles = {
@@ -35,6 +36,12 @@ const styles = {
       z-index: 0;
     }
   `,
+  chart: css`
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  `,
 };
 
 interface ROIProps {
@@ -61,6 +68,9 @@ export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
       <Box size={{ top: Size.LARGE * 3 }} style={{ display: 'flex', justifyContent: 'center' }}>
         <Slider value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
+      <div className={styles.chart}>
+        <AnimatedChart height={400} value={value} />
+      </div>
     </div>
   );
 };
