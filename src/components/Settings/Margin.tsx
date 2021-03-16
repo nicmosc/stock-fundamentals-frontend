@@ -53,10 +53,12 @@ export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
   return (
     <div className={styles.margin}>
       <Title inversed={false} level={1} align="center">
-        First, adjust your desired rate of return.
+        Then, the margin of security you require
       </Title>
       <Box size={Size.LARGE} style={{ textAlign: 'center' }}>
-        <Text>Over the next 10 years, year over year. Recommended: 10-30.</Text>
+        <Text>
+          Lower means less risk taken, more means more confidence that the target will be reached
+        </Text>
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
@@ -68,7 +70,7 @@ export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
         <Slider color="blue" value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
       <div className={styles.chart}>
-        <AnimatedProgress value={value} height={400} />
+        <AnimatedProgress value={value} height={500} />
       </div>
     </div>
   );
