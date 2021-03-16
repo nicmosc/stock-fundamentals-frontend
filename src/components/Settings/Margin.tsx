@@ -53,11 +53,12 @@ export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
   return (
     <div className={styles.margin}>
       <Title inversed={false} level={1} align="center">
-        Then, the margin of security you require
+        Then, the margin of safety you require
       </Title>
       <Box size={Size.LARGE} style={{ textAlign: 'center' }}>
         <Text>
-          Lower means less risk taken, more means more confidence that the target will be reached
+          Lower margin means more risk taken, resulting in more stocks to pick from. More risk means
+          higher chance of failure
         </Text>
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
