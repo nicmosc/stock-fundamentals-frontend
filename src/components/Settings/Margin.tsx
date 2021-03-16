@@ -4,25 +4,20 @@ import { Color, Size } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
-import { AnimatedChart } from './AnimatedChart';
+import { AnimatedProgress } from './AnimatedProgress';
 import { Slider } from './Slider';
 
 const styles = {
-  roi: css`
+  margin: css`
     margin-top: -${Size.EXTRA_LARGE}px;
   `,
   gradientText: css`
     display: inline-block;
     position: relative;
-    background: linear-gradient(
-      90deg,
-      ${Color.orange.primary},
-      50%,
-      ${Color.volcano.primary} 60.61%
-    );
+    background: linear-gradient(90deg, ${Color.blue.primary}, 50%, ${Color.geekblue[4]} 60.61%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0px 4px 8px rgba(255, 100, 38, 0.4);
+    text-shadow: 0px 4px 8px rgba(24, 144, 255, 0.4);
 
     z-index: 1;
 
@@ -35,7 +30,7 @@ const styles = {
       height: 15px;
       filter: blur(40px);
       opacity: 0.4;
-      background: ${Color.volcano.primary};
+      background: ${Color.blue.primary};
       z-index: 0;
     }
   `,
@@ -48,15 +43,15 @@ const styles = {
   `,
 };
 
-interface ROIProps {
+interface MarginProps {
   value: number;
   onChange: (value: number) => void;
   onConfirm: VoidFunction;
 }
 
-export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
+export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
   return (
-    <div className={styles.roi}>
+    <div className={styles.margin}>
       <Title inversed={false} level={1} align="center">
         First, adjust your desired rate of return.
       </Title>
@@ -70,10 +65,10 @@ export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
         </div>
       </Box>
       <Box size={{ top: Size.LARGE * 3 }} style={{ display: 'flex', justifyContent: 'center' }}>
-        <Slider value={value} onChange={onChange} onConfirm={onConfirm} />
+        <Slider color="blue" value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
       <div className={styles.chart}>
-        <AnimatedChart height={400} value={value} />
+        <AnimatedProgress value={value} height={400} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { CheckOutlined } from '@ant-design/icons';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
@@ -49,6 +49,14 @@ const styles = {
       z-index: 0;
     }
   `,
+  blue: css`
+    background: linear-gradient(270deg, ${Color.blue.primary} 2.49%, ${Color.geekblue[4]} 107.46%);
+    box-shadow: 0px 4px 8px rgba(24, 144, 255, 0.4);
+
+    &::before {
+      background: ${Color.blue.primary};
+    }
+  `,
   handle: css`
     display: flex;
     align-items: center;
@@ -73,9 +81,10 @@ interface SliderProps {
   value: number;
   onChange: (value: number) => void;
   onConfirm: VoidFunction;
+  color?: 'orange' | 'blue';
 }
 
-export const Slider = ({ value, onChange, onConfirm }: SliderProps) => {
+export const Slider = ({ value, onChange, onConfirm, color = 'orange' }: SliderProps) => {
   const [canConfirm, setCanConfirm] = useState(true);
   const x = useMotionValue(value);
   const _width = useTransform(x, (value) => value / 3);
@@ -117,13 +126,16 @@ export const Slider = ({ value, onChange, onConfirm }: SliderProps) => {
           }}>
           <CheckOutlined
             style={{
-              color: Color.volcano.primary,
+              color: color === 'blue' ? Color.blue.primary : Color.volcano.primary,
               strokeWidth: 100,
-              stroke: Color.volcano.primary,
+              stroke: color === 'blue' ? Color.blue.primary : Color.volcano.primary,
             }}
           />
         </motion.div>
-        <motion.div className={styles.filledTrack} style={{ width }} />
+        <motion.div
+          className={cx(styles.filledTrack, { [styles.blue]: color === 'blue' })}
+          style={{ width }}
+        />
       </div>
       <Box size={{ top: Size.LARGE }} style={{ textAlign: 'center' }}>
         <Text light color={Color.tertiary}>

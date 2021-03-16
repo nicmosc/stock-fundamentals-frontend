@@ -6,3 +6,4 @@ export * from './size';
 export * from './get-sector-colors';
 export * from './animation';
 export * from './value-of';
+export * from './normalize';

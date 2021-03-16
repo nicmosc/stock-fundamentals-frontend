@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
 import { useState } from 'react';
 
+import { Margin } from './Margin';
 import { ROI } from './ROI';
 
 const styles = {
@@ -18,11 +19,21 @@ interface SettingsProps {
   onClickClose: VoidFunction;
 }
 
-export const Settings = ({ roi, onChangeRoi, onClickClose }: SettingsProps) => {
-  const [page] = useState(1);
+export const Settings = ({
+  roi,
+  onChangeRoi,
+  margin,
+  onChangeMargin,
+  onClickClose,
+}: SettingsProps) => {
+  const [page, setPage] = useState(1);
   return (
     <div className={styles.settings}>
-      {page === 1 ? <ROI value={roi} onChange={onChangeRoi} onConfirm={onClickClose} /> : null}
+      {page === 1 ? (
+        <ROI value={roi} onChange={onChangeRoi} onConfirm={() => setPage(2)} />
+      ) : (
+        <Margin value={margin} onChange={onChangeMargin} onConfirm={onClickClose} />
+      )}
     </div>
   );
 };
