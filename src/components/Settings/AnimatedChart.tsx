@@ -1,4 +1,5 @@
 import { css } from '@emotion/css';
+import { useEffect, useState } from 'react';
 
 import { Color } from '../../utils';
 
@@ -33,13 +34,28 @@ interface AnimatedChartProps {
 }
 
 export const AnimatedChart = ({ value, height }: AnimatedChartProps) => {
+  const [key, setKey] = useState(Math.random());
   const width = window.innerWidth + OFFSET * 2;
   const heights = [...Array(POINTS_COUNT)].map(
     (_, i) => (i / 100) * width * (((value / 100) * height) / width),
   );
+
+  const handleResize = () => {
+    setKey(Math.random());
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div className={styles.chart} style={{ height }}>
       <svg
+        key={key}
         className={styles.svg}
         height={height}
         width={width}
