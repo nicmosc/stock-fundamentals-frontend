@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { Col, Row } from 'antd';
+import { Col, Empty, Row } from 'antd';
 import { CSSProperties, Fragment, useRef, useState } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList as List } from 'react-window';
@@ -14,6 +14,7 @@ import {
   getSectorColors,
   round,
 } from '../utils';
+import { Box } from './Box';
 import { Discount } from './Discount';
 import { SortBy, SortByEnum } from './SortBy';
 import { Text } from './Text';
@@ -162,102 +163,122 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
         </div>
       ) : null}
       <div className={cx(styles.panel, { [styles.hidden]: hidden })}>
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              useIsScrolling
-              className={styles.table}
-              height={height - (60 + Size.MEDIUM) * 4}
-              itemCount={stocks.length}
-              itemSize={60 + Size.MEDIUM * 2}
-              onScroll={handleScroll}
-              width={width}>
-              {({
-                index,
-                style,
-                isScrolling,
-              }: {
-                index: number;
-                style: CSSProperties;
-                isScrolling?: boolean;
-              }) => {
-                const stock = stocks[index];
-                return (
-                  <Row
-                    style={{
-                      ...style,
-                      width: (style.width as number) - Size.EXTRA_LARGE,
-                      left: (style.left as number) + Size.EXTRA_LARGE,
-                      top: (style.top as number) + Size.EXTRA_LARGE * 2,
-                      height: (style.height as number) - Size.LARGE,
-                      marginLeft: 0,
-                      marginRight: 0,
-                    }}
-                    onClick={() => onClickStock(stock)}
-                    className={styles.row}
-                    gutter={Size.MEDIUM}
-                    key={stock.symbol}
-                    align="middle"
-                    justify="space-between">
-                    {isScrolling && showLoading.current ? (
-                      <Fragment>
-                        <Col span={3}>
-                          <Text bold size={Size.LARGE}>
-                            {stock.symbol}
-                          </Text>
-                        </Col>
-                        <Col span={21}>
-                          <div className={styles.loader} />
-                        </Col>
-                      </Fragment>
-                    ) : (
-                      <Fragment>
-                        <Col span={3}>
-                          <Text bold size={Size.LARGE}>
-                            {stock.symbol}
-                          </Text>
-                        </Col>
-                        <Col
-                          span={6}
-                          style={{
-                            maxWidth: 200,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            color: Color.tertiary,
-                          }}>
-                          <Text color={Color.tertiary}>{stock.name}</Text>
-                        </Col>
-                        <Col span={5}>
-                          <Text color={getSectorColors(stock.profile.sector).default}>
-                            {stock.profile.sector}
-                          </Text>
-                        </Col>
-                        <Col span={4} style={{ textAlign: 'right' }}>
-                          <Text color={Color.tertiary}>
-                            Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
-                          </Text>
-                        </Col>
-                        <Col span={4} style={{ textAlign: 'right' }}>
-                          <Text bold size={Size.LARGE}>
-                            ${round(stock.stats.currentPrice)}
-                          </Text>
-                        </Col>
-                        <Col span={2}>
-                          <Discount
-                            amount={Math.round(
-                              (1 - stock.stats.currentPrice / stock.fairPrice) * 100,
-                            )}
-                          />
-                        </Col>
-                      </Fragment>
-                    )}
-                  </Row>
-                );
-              }}
-            </List>
-          )}
-        </AutoSizer>
+        {stocks.length === 0 ? (
+          <Box
+            size={{ top: Size.LARGE }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '50%',
+              width: '100%',
+            }}>
+            <Empty
+              description={
+                <Text color={Color.secondary} light>
+                  No stocks match your profile
+                </Text>
+              }
+            />
+          </Box>
+        ) : (
+          <AutoSizer>
+            {({ height, width }) => (
+              <List
+                useIsScrolling
+                className={styles.table}
+                height={height - (60 + Size.MEDIUM) * 4}
+                itemCount={stocks.length}
+                itemSize={60 + Size.MEDIUM * 2}
+                onScroll={handleScroll}
+                width={width}>
+                {({
+                  index,
+                  style,
+                  isScrolling,
+                }: {
+                  index: number;
+                  style: CSSProperties;
+                  isScrolling?: boolean;
+                }) => {
+                  const stock = stocks[index];
+                  return (
+                    <Row
+                      style={{
+                        ...style,
+                        width: (style.width as number) - Size.EXTRA_LARGE,
+                        left: (style.left as number) + Size.EXTRA_LARGE,
+                        top: (style.top as number) + Size.EXTRA_LARGE * 2,
+                        height: (style.height as number) - Size.LARGE,
+                        marginLeft: 0,
+                        marginRight: 0,
+                      }}
+                      onClick={() => onClickStock(stock)}
+                      className={styles.row}
+                      gutter={Size.MEDIUM}
+                      key={stock.symbol}
+                      align="middle"
+                      justify="space-between">
+                      {isScrolling && showLoading.current ? (
+                        <Fragment>
+                          <Col span={3}>
+                            <Text bold size={Size.LARGE}>
+                              {stock.symbol}
+                            </Text>
+                          </Col>
+                          <Col span={21}>
+                            <div className={styles.loader} />
+                          </Col>
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          <Col span={3}>
+                            <Text bold size={Size.LARGE}>
+                              {stock.symbol}
+                            </Text>
+                          </Col>
+                          <Col
+                            span={6}
+                            style={{
+                              maxWidth: 200,
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
+                              color: Color.tertiary,
+                            }}>
+                            <Text color={Color.tertiary}>{stock.name}</Text>
+                          </Col>
+                          <Col span={5}>
+                            <Text color={getSectorColors(stock.profile.sector).default}>
+                              {stock.profile.sector}
+                            </Text>
+                          </Col>
+                          <Col span={4} style={{ textAlign: 'right' }}>
+                            <Text color={Color.tertiary}>
+                              Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
+                            </Text>
+                          </Col>
+                          <Col span={4} style={{ textAlign: 'right' }}>
+                            <Text bold size={Size.LARGE}>
+                              ${round(stock.stats.currentPrice)}
+                            </Text>
+                          </Col>
+                          <Col span={2}>
+                            <Discount
+                              amount={Math.round(
+                                (1 - stock.stats.currentPrice / stock.fairPrice) * 100,
+                              )}
+                            />
+                          </Col>
+                        </Fragment>
+                      )}
+                    </Row>
+                  );
+                }}
+              </List>
+            )}
+          </AutoSizer>
+        )}
       </div>
     </Fragment>
   );
