@@ -1,6 +1,6 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { css, cx } from '@emotion/css';
-import { motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
+import { animate, motion, useMotionTemplate, useMotionValue, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 import { Color, Size } from '../../utils';
@@ -86,17 +86,24 @@ interface SliderProps {
 
 export const Slider = ({ value, onChange, onConfirm, color = 'orange' }: SliderProps) => {
   const [canConfirm, setCanConfirm] = useState(true);
-  const x = useMotionValue(value);
+  const x = useMotionValue(0);
   const _width = useTransform(x, (value) => value / 3);
   const width = useMotionTemplate`${_width}%`;
 
-  useEffect(
-    () =>
-      _width.onChange((latest) => {
-        onChange(Math.round(Math.max(Math.min(latest, 100), 0)));
-      }),
-    [],
-  );
+  useEffect(() => {
+    _width.onChange((latest) => {
+      onChange(Math.round(Math.max(Math.min(latest, 100), 0)));
+    });
+  }, []);
+
+  useEffect(() => {
+    const controls = animate(x, value * 3, {
+      duration: 0.8,
+      ease: [0.86, 0, 0.07, 1],
+    });
+
+    return controls.stop;
+  }, []);
 
   return (
     <div>
