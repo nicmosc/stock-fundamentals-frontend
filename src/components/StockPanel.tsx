@@ -5,7 +5,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useEffect, useState } from 'react';
 
 import { Stock } from '../types';
-import { ANIMATION_CURVE, ANIMATION_TIME, Color, Size, getSectorColors, round } from '../utils';
+import {
+  ANIMATION_CURVE,
+  ANIMATION_TIME,
+  Color,
+  Size,
+  getSectorColors,
+  round,
+  screenM,
+} from '../utils';
+import { useScreenSize } from '../utils/hooks/use-screen-size';
 import { Box } from './Box';
 import { StarsRating } from './StarsRating';
 import { Text } from './Text';
@@ -21,6 +30,10 @@ const styles = {
     width: 100%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15), 0px 50px 20px -34px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+
+    @media ${screenM} {
+      padding: ${Size.LARGE}px;
+    }
   `,
   close: css`
     position: absolute;
@@ -153,36 +166,41 @@ const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: Voi
 };
 
 const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: VoidFunction }) => {
+  const { screenSize, ScreenSizes } = useScreenSize();
+  const isMobile = screenSize <= ScreenSizes.M;
+
   return (
     <Fragment>
       <Text color={Color.secondary}>{stock.name}</Text>
       <Box size={{ top: Size.LARGE }}>
         <Row gutter={Size.LARGE}>
-          <Col span={8}>
-            <Row gutter={[Size.SMALL, Size.EXTRA_SMALL]}>
-              <Col span={6}>
-                <Text color={Color.secondary}>Sector</Text>
-              </Col>
-              <Col span={18}>
-                <Text color={getSectorColors(stock.profile.sector).default}>
-                  {stock.profile.sector}
-                </Text>
-              </Col>
-              <Col span={6}>
-                <Text color={Color.secondary}>Industry</Text>
-              </Col>
-              <Col span={18}>
-                <Text>{stock.profile.industry}</Text>
-              </Col>
-              <Col span={6}>
-                <Text color={Color.secondary}>Country</Text>
-              </Col>
-              <Col span={18}>
-                <Text>{stock.profile.country}</Text>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={8}>
+          {!isMobile ? (
+            <Col span={8}>
+              <Row gutter={[Size.SMALL, Size.EXTRA_SMALL]}>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Sector</Text>
+                </Col>
+                <Col span={18}>
+                  <Text color={getSectorColors(stock.profile.sector).default}>
+                    {stock.profile.sector}
+                  </Text>
+                </Col>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Industry</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{stock.profile.industry}</Text>
+                </Col>
+                <Col span={6}>
+                  <Text color={Color.secondary}>Country</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{stock.profile.country}</Text>
+                </Col>
+              </Row>
+            </Col>
+          ) : null}
+          <Col span={isMobile ? 24 : 8}>
             <Row gutter={Size.MEDIUM}>
               <Col>
                 <Text>Fundamentals score:</Text>
@@ -211,19 +229,19 @@ const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: Vo
                 </Typography.Link>
               </Col>
             </Row>
-            <Box size={{ top: Size.MEDIUM }}>
+            <Box size={{ top: isMobile ? Size.SMALL : Size.MEDIUM }}>
               <StarsRating rating={stock.fundamentalsScore + 0.2} />
             </Box>
           </Col>
-          <Col span={8}>
+          <Col span={isMobile ? 24 : 8}>
             <Row
-              style={{ marginTop: -Size.SMALL }}
+              style={{ marginTop: isMobile ? Size.MEDIUM : -Size.SMALL }}
               gutter={[Size.SMALL, Size.EXTRA_SMALL]}
               align="middle">
               <Col span={12}>
                 <Text color={Color.secondary}>Current price</Text>
               </Col>
-              <Col span={12}>
+              <Col span={12} style={{ textAlign: 'right' }}>
                 <Text bold size={Size.LARGE}>
                   ${round(stock.stats.currentPrice)}
                 </Text>
@@ -249,7 +267,7 @@ const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: Vo
                   />
                 </Tooltip>
               </Col>
-              <Col span={12}>
+              <Col span={12} style={{ textAlign: 'right' }}>
                 <Text bold size={Size.LARGE}>
                   ${round(stock.fairPrice)}
                 </Text>

@@ -10,9 +10,10 @@ import {
 } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 
-import { Size } from '../utils';
+import { Size, screenM } from '../utils';
 
 const TOP_HEIGHT = 370;
+const MOBILE_TOP_HEIGHT = 430;
 
 const styles = {
   container: css`
@@ -28,12 +29,22 @@ const styles = {
     left: 0;
     top: 0;
     z-index: -1;
+
+    @media ${screenM} {
+      height: ${MOBILE_TOP_HEIGHT}px;
+    }
   `,
   bottom: css`
     height: 100%;
     position: relative;
   `,
 };
+
+function _getTotalY() {
+  const isMobile = window.innerWidth <= 425;
+
+  return (isMobile ? MOBILE_TOP_HEIGHT : TOP_HEIGHT) + Size.LARGE;
+}
 
 const topVariants: Variants = {
   hidden: {
@@ -44,14 +55,12 @@ const topVariants: Variants = {
   },
 };
 
-const totalY = TOP_HEIGHT + Size.LARGE;
-
 const bottomVariants: Variants = {
   default: {
     y: 0,
   },
   compact: (progress: number) => ({
-    y: totalY * progress,
+    y: _getTotalY() * progress,
   }),
 };
 
@@ -70,10 +79,10 @@ export const AnimatedScrollContainer = ({
 }: AnimatedScrollContainerProps) => {
   const dragControls = useDragControls();
   const scrollYOffset = useMotionValue(0);
-  const opacity = useTransform(scrollYOffset, [0, totalY], [0, 1]);
-  const y = useTransform(scrollYOffset, [0, totalY], [30, 0]);
-  const scale = useTransform(scrollYOffset, [0, totalY], [0.7, 1]);
-  const rotateX = useTransform(scrollYOffset, [0, totalY], [15, 0]);
+  const opacity = useTransform(scrollYOffset, [0, _getTotalY()], [0, 1]);
+  const y = useTransform(scrollYOffset, [0, _getTotalY()], [30, 0]);
+  const scale = useTransform(scrollYOffset, [0, _getTotalY()], [0.7, 1]);
+  const rotateX = useTransform(scrollYOffset, [0, _getTotalY()], [15, 0]);
 
   const handleActiveChange = () => {
     if (!active && scrollYOffset.get() !== 0) {
@@ -81,8 +90,8 @@ export const AnimatedScrollContainer = ({
         duration: 0.8,
         ease: [0.86, 0, 0.07, 1],
       });
-    } else if (active && scrollYOffset.get() !== totalY) {
-      animate(scrollYOffset, totalY, {
+    } else if (active && scrollYOffset.get() !== _getTotalY()) {
+      animate(scrollYOffset, _getTotalY(), {
         duration: 0.8,
         ease: [0.86, 0, 0.07, 1],
       });
@@ -94,14 +103,14 @@ export const AnimatedScrollContainer = ({
     const deltaY = _deltaY * 1.5;
     const currentValue = scrollYOffset.get();
     const newValue = Math.max(
-      Math.min(currentValue + Math.abs(deltaY) * (deltaY < 0 ? 1 : -1), totalY),
+      Math.min(currentValue + Math.abs(deltaY) * (deltaY < 0 ? 1 : -1), _getTotalY()),
       0,
     );
     animate(scrollYOffset, newValue, {
       duration: 0.1,
     });
 
-    if (newValue < totalY - totalY / 4) {
+    if (newValue < _getTotalY() - _getTotalY() / 4) {
       onResetPanel();
     }
   };
@@ -158,7 +167,7 @@ export const AnimatedScrollContainer = ({
           }
         }}
         dragElastic={0.3}
-        dragConstraints={{ top: active ? totalY : 0, bottom: active ? totalY : 0 }}
+        dragConstraints={{ top: active ? _getTotalY() : 0, bottom: active ? _getTotalY() : 0 }}
         className={styles.bottom}>
         {bottom}
       </motion.div>

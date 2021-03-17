@@ -236,12 +236,12 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
                       justify="space-between">
                       {isScrolling && showLoading.current ? (
                         <Fragment>
-                          <Col span={3}>
+                          <Col span={isMobile ? 7 : 3}>
                             <Text bold size={Size.LARGE}>
                               {stock.symbol}
                             </Text>
                           </Col>
-                          <Col span={21}>
+                          <Col span={isMobile ? 17 : 21}>
                             <div className={styles.loader} />
                           </Col>
                         </Fragment>
