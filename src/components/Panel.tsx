@@ -13,7 +13,9 @@ import {
   ValueOf,
   getSectorColors,
   round,
+  screenM,
 } from '../utils';
+import { useScreenSize } from '../utils/hooks/use-screen-size';
 import { Box } from './Box';
 import { Discount } from './Discount';
 import { SortBy, SortByEnum } from './SortBy';
@@ -92,6 +94,10 @@ const styles = {
 
   table: css`
     padding-bottom: ${Size.EXTRA_LARGE * 3}px;
+
+    @media ${screenM} {
+      padding-bottom: 0px;
+    }
   `,
   row: css`
     white-space: nowrap;
@@ -103,6 +109,10 @@ const styles = {
       background: ${Color.grey[2]};
       box-shadow: 0px 0px 0px 10px ${Color.grey[2]};
       border-radius: ${Size.EXTRA_SMALL}px;
+    }
+
+    @media ${screenM} {
+      width: calc(100% - ${Size.MEDIUM * 2}px);
     }
   `,
   loader: css`
@@ -131,6 +141,7 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
   const timeout = useRef<NodeJS.Timeout>();
   const showLoading = useRef(false);
   const [showSortBy, setShowSortBy] = useState(true);
+  const { screenSize, ScreenSizes } = useScreenSize();
 
   const handleScroll = ({ scrollOffset }: { scrollOffset: number }) => {
     if (timeout.current != null) {
@@ -153,6 +164,9 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
       showLoading.current = false;
     }, 500);
   };
+
+  const isMobile = screenSize <= ScreenSizes.M;
+  const rowHeight = isMobile ? 90 : 60;
 
   return (
     <Fragment>
@@ -187,9 +201,9 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
               <List
                 useIsScrolling
                 className={styles.table}
-                height={height - (60 + Size.MEDIUM) * 4}
+                height={height - (rowHeight + Size.MEDIUM) * (isMobile ? 3 : 4)}
                 itemCount={stocks.length}
-                itemSize={60 + Size.MEDIUM * 2}
+                itemSize={rowHeight + Size.MEDIUM * 2}
                 onScroll={handleScroll}
                 width={width}>
                 {({
@@ -206,8 +220,9 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
                     <Row
                       style={{
                         ...style,
-                        width: (style.width as number) - Size.EXTRA_LARGE,
-                        left: (style.left as number) + Size.EXTRA_LARGE,
+                        width:
+                          (style.width as number) - (isMobile ? Size.MEDIUM : Size.EXTRA_LARGE),
+                        left: (style.left as number) + (isMobile ? Size.MEDIUM : Size.EXTRA_LARGE),
                         top: (style.top as number) + Size.EXTRA_LARGE * 2,
                         height: (style.height as number) - Size.LARGE,
                         marginLeft: 0,
@@ -232,44 +247,70 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
                         </Fragment>
                       ) : (
                         <Fragment>
-                          <Col span={3}>
+                          {isMobile ? (
+                            <Col
+                              span={24}
+                              style={{
+                                color: Color.tertiary,
+                              }}>
+                              <Text color={Color.tertiary}>{stock.name}</Text>
+                            </Col>
+                          ) : null}
+                          <Col span={isMobile ? 8 : 3}>
                             <Text bold size={Size.LARGE}>
                               {stock.symbol}
                             </Text>
                           </Col>
-                          <Col
-                            span={6}
-                            style={{
-                              maxWidth: 200,
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              whiteSpace: 'nowrap',
-                              color: Color.tertiary,
-                            }}>
-                            <Text color={Color.tertiary}>{stock.name}</Text>
-                          </Col>
-                          <Col span={5}>
-                            <Text color={getSectorColors(stock.profile.sector).default}>
-                              {stock.profile.sector}
-                            </Text>
-                          </Col>
-                          <Col span={4} style={{ textAlign: 'right' }}>
-                            <Text color={Color.tertiary}>
-                              Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
-                            </Text>
-                          </Col>
-                          <Col span={4} style={{ textAlign: 'right' }}>
+                          {!isMobile ? (
+                            <Col
+                              span={6}
+                              style={{
+                                maxWidth: 200,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                color: Color.tertiary,
+                              }}>
+                              <Text color={Color.tertiary}>{stock.name}</Text>
+                            </Col>
+                          ) : null}
+                          {!isMobile ? (
+                            <Col span={isMobile ? 24 : 5}>
+                              <Text color={getSectorColors(stock.profile.sector).default}>
+                                {stock.profile.sector}
+                              </Text>
+                            </Col>
+                          ) : null}
+                          {!isMobile ? (
+                            <Col span={4} style={{ textAlign: 'right' }}>
+                              <Text color={Color.tertiary}>
+                                Valued at &nbsp;<Text bold>${stock.fairPrice}</Text>
+                              </Text>
+                            </Col>
+                          ) : null}
+                          <Col span={isMobile ? 6 : 4} style={{ textAlign: 'right' }}>
                             <Text bold size={Size.LARGE}>
                               ${round(stock.stats.currentPrice)}
                             </Text>
                           </Col>
-                          <Col span={2}>
+                          <Col span={isMobile ? undefined : 2}>
                             <Discount
                               amount={Math.round(
                                 (1 - stock.stats.currentPrice / stock.fairPrice) * 100,
                               )}
                             />
                           </Col>
+                          {isMobile ? (
+                            <Col
+                              span={24}
+                              style={{
+                                color: Color.tertiary,
+                              }}>
+                              <Text color={getSectorColors(stock.profile.sector).default}>
+                                {stock.profile.sector}
+                              </Text>
+                            </Col>
+                          ) : null}
                         </Fragment>
                       )}
                     </Row>

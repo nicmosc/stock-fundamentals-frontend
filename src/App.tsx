@@ -150,7 +150,7 @@ export const App = () => {
           <Box
             style={{ display: 'flex', flex: 1, minHeight: 0 }}
             inset
-            size={{ top: Size.SMALL, left: Size.SMALL, right: Size.SMALL }}>
+            size={{ top: Size.SMALL, left: Size.MEDIUM, right: Size.MEDIUM }}>
             <div className={styles.container}>
               <AnimatedScrollContainer
                 onResetPanel={() => setActiveStock(undefined)}
