@@ -79,7 +79,7 @@ export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
         </div>
       </Box>
       <Box
-        size={{ top: isMobile ? Size.EXTRA_LARGE : Size.LARGE * 3 }}
+        size={{ top: isMobile ? Size.LARGE : Size.LARGE * 3 }}
         style={{ display: 'flex', justifyContent: 'center' }}>
         <Slider value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>

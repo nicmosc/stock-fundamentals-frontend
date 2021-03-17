@@ -30,6 +30,7 @@ const styles = {
     width: 100%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15), 0px 50px 20px -34px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    transform: translateZ(0);
 
     @media ${screenM} {
       padding: ${Size.LARGE}px;
@@ -150,7 +151,7 @@ const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: Voi
         </Row>
       </div>
       <Box size={{ top: Size.MEDIUM }}>
-        <Row gutter={[Size.EXTRA_LARGE, Size.SMALL]}>
+        <Row gutter={[Size.EXTRA_LARGE, isMobile ? Size.EXTRA_SMALL : Size.SMALL]}>
           {Object.keys(StatMapping).map((key) => {
             const value = stats[key as Keys];
             if (value == null) {
@@ -158,10 +159,10 @@ const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: Voi
             }
             return (
               <Fragment key={key}>
-                <Col span={isMobile ? 18 : 6}>
+                <Col span={isMobile ? 16 : 6} style={{ whiteSpace: 'nowrap' }}>
                   <Text color={Color.secondary}>{StatMapping[key as Keys]}</Text>
                 </Col>
-                <Col span={6} style={{ textAlign: 'right' }}>
+                <Col span={isMobile ? 8 : 6} style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
                   <Text>{percentages.includes(key) ? `${round(value * 100)}%` : round(value)}</Text>
                 </Col>
               </Fragment>

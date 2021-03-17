@@ -119,7 +119,7 @@ export const App = () => {
       ) : (
         <Fragment>
           <Box size={isMobile ? { left: Size.LARGE, right: Size.LARGE } : Size.LARGE}>
-            <Title level={isMobile ? 2 : 1} align={isMobile ? undefined : 'center'}>
+            <Title level={isMobile ? 3 : 1} align={isMobile ? undefined : 'center'}>
               Stocks at a discounted price for <span style={{ fontStyle: 'italic' }}>you</span>
             </Title>
             {!isMobile ? (

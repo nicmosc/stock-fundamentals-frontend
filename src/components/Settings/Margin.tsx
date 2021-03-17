@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color, Size, useScreenSize } from '../../utils';
+import { Color, Size, screenM, useScreenSize } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
@@ -10,6 +10,10 @@ import { Slider } from './Slider';
 const styles = {
   margin: css`
     margin-top: -${Size.EXTRA_LARGE}px;
+
+    @media ${screenM} {
+      margin-top: 0;
+    }
   `,
   gradientText: css`
     display: inline-block;
@@ -65,19 +69,19 @@ export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
           higher chance of failure
         </Text>
       </Box>
-      <Box size={{ top: isMobile ? Size.SMALL : Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
+      <Box size={{ top: isMobile ? undefined : Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
           <Text size={Size.EXTRA_LARGE * 2}>+{value}</Text>
           <Text size={Size.EXTRA_LARGE}>%</Text>
         </div>
       </Box>
       <Box
-        size={{ top: isMobile ? Size.EXTRA_LARGE : Size.LARGE * 3 }}
+        size={{ top: isMobile ? Size.LARGE : Size.LARGE * 3 }}
         style={{ display: 'flex', justifyContent: 'center' }}>
         <Slider color="blue" value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
       <div className={styles.chart}>
-        <AnimatedProgress value={value} height={400} />
+        <AnimatedProgress value={value} height={isMobile ? 250 : 400} />
       </div>
     </div>
   );

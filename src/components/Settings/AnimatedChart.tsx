@@ -16,6 +16,7 @@ const styles = {
   svg: css`
     transform-origin: bottom;
     transform: translateY(2px) scale(1.05);
+
     path {
       stroke: ${Color.volcano[6]};
       stroke-width: 2;
