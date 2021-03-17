@@ -14,8 +14,8 @@ import {
   getSectorColors,
   round,
   screenM,
+  useScreenSize,
 } from '../utils';
-import { useScreenSize } from '../utils/hooks/use-screen-size';
 import { Box } from './Box';
 import { Discount } from './Discount';
 import { SortBy, SortByEnum } from './SortBy';

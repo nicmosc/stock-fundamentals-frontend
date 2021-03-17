@@ -15,8 +15,7 @@ import {
 } from './components';
 import { SortByEnum } from './components/SortBy';
 import { Stock } from './types';
-import { Color, Size, ValueOf, computeRankScores, useFetchStocks } from './utils';
-import { useScreenSize } from './utils/hooks/use-screen-size';
+import { Color, Size, ValueOf, computeRankScores, useFetchStocks, useScreenSize } from './utils';
 
 injectGlobal`
   html, body {

@@ -13,8 +13,8 @@ import {
   getSectorColors,
   round,
   screenM,
+  useScreenSize,
 } from '../utils';
-import { useScreenSize } from '../utils/hooks/use-screen-size';
 import { Box } from './Box';
 import { StarsRating } from './StarsRating';
 import { Text } from './Text';
@@ -43,6 +43,7 @@ const styles = {
     transform: rotate(45deg);
     display: flex;
     color: ${Color.tertiary};
+    z-index: 5;
 
     &:hover {
       cursor: pointer;
@@ -54,6 +55,10 @@ const styles = {
     bottom: ${Size.LARGE}px;
     left: 50%;
     transform: translateX(-50%);
+
+    @media ${screenM} {
+      bottom: ${Size.EXTRA_LARGE}px;
+    }
   `,
   chart: css`
     position: absolute;
@@ -127,6 +132,9 @@ const StatMapping: { [key in Keys]: string } = {
 const percentages = ['revenueGrowth', 'profitMargin', 'growthRate', 'FCFYield', 'ROIC'];
 
 const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: VoidFunction }) => {
+  const { screenSize, ScreenSizes } = useScreenSize();
+  const isMobile = screenSize <= ScreenSizes.M;
+
   return (
     <div>
       <div onClick={onClickBack} className={styles.back}>
@@ -150,7 +158,7 @@ const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: Voi
             }
             return (
               <Fragment key={key}>
-                <Col span={6}>
+                <Col span={isMobile ? 18 : 6}>
                   <Text color={Color.secondary}>{StatMapping[key as Keys]}</Text>
                 </Col>
                 <Col span={6} style={{ textAlign: 'right' }}>

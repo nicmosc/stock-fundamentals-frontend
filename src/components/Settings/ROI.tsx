@@ -1,7 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color, Size, screenM } from '../../utils';
-import { useScreenSize } from '../../utils/hooks/use-screen-size';
+import { Color, Size, screenM, useScreenSize } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
