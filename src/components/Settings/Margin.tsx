@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
 
 import { Color, Size } from '../../utils';
+import { useScreenSize } from '../../utils/hooks/use-screen-size';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
@@ -50,28 +51,34 @@ interface MarginProps {
 }
 
 export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
+  const { screenSize, ScreenSizes } = useScreenSize();
+  const isMobile = screenSize <= ScreenSizes.M;
   return (
     <div className={styles.margin}>
-      <Title inversed={false} level={1} align="center">
-        Then, the margin of safety you require
-      </Title>
-      <Box size={Size.LARGE} style={{ textAlign: 'center' }}>
+      <Box size={{ left: Size.LARGE, right: Size.LARGE }}>
+        <Title inversed={false} level={isMobile ? 3 : 1} align={isMobile ? undefined : 'center'}>
+          Then, the margin of safety you require
+        </Title>
+      </Box>
+      <Box size={Size.LARGE} style={{ textAlign: isMobile ? undefined : 'center' }}>
         <Text>
           Lower margin means more risk taken, resulting in more stocks to pick from. More risk means
           higher chance of failure
         </Text>
       </Box>
-      <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
+      <Box size={{ top: isMobile ? Size.SMALL : Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
           <Text size={Size.EXTRA_LARGE * 2}>+{value}</Text>
           <Text size={Size.EXTRA_LARGE}>%</Text>
         </div>
       </Box>
-      <Box size={{ top: Size.LARGE * 3 }} style={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        size={{ top: isMobile ? Size.EXTRA_LARGE : Size.LARGE * 3 }}
+        style={{ display: 'flex', justifyContent: 'center' }}>
         <Slider color="blue" value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
       <div className={styles.chart}>
-        <AnimatedProgress value={value} height={500} />
+        <AnimatedProgress value={value} height={400} />
       </div>
     </div>
   );

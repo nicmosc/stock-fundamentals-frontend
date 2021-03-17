@@ -24,7 +24,7 @@ const styles = {
   `,
 };
 
-const randomSequence = [...Array(POINTS_COUNT)].map(() => _randomBetween(0, 400));
+const randomSequence = [...Array(POINTS_COUNT)].map(() => _randomBetween(0, 300));
 
 const OFFSET = 40;
 

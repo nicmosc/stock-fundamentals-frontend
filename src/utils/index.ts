@@ -7,3 +7,4 @@ export * from './get-sector-colors';
 export * from './animation';
 export * from './value-of';
 export * from './normalize';
+export * from './media-queries';

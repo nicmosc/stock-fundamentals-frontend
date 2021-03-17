@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color } from '../utils';
+import { Color, screenM } from '../utils';
 
 const styles = {
   logo: css`
@@ -13,6 +13,18 @@ const styles = {
       margin-top: -14px;
       height: calc(100% + 27px);
       width: calc(100% + 27px);
+    }
+
+    @media ${screenM} {
+      height: 50px;
+      width: 50px;
+
+      > svg {
+        margin-left: -7px;
+        margin-top: -7px;
+        height: calc(100% + 13px);
+        width: calc(100% + 13px);
+      }
     }
   `,
 };

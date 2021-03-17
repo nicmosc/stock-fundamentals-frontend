@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
 
-import { Color, Size } from '../../utils';
+import { Color, Size, screenM } from '../../utils';
+import { useScreenSize } from '../../utils/hooks/use-screen-size';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
@@ -10,6 +11,10 @@ import { Slider } from './Slider';
 const styles = {
   roi: css`
     margin-top: -${Size.EXTRA_LARGE}px;
+
+    @media ${screenM} {
+      margin-top: 0;
+    }
   `,
   gradientText: css`
     display: inline-block;
@@ -55,25 +60,32 @@ interface ROIProps {
 }
 
 export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
+  const { screenSize, ScreenSizes } = useScreenSize();
+  const isMobile = screenSize <= ScreenSizes.M;
   return (
     <div className={styles.roi}>
-      <Title inversed={false} level={1} align="center">
-        First, adjust your desired rate of return.
-      </Title>
-      <Box size={Size.LARGE} style={{ textAlign: 'center' }}>
+      <Box size={{ left: Size.LARGE, right: Size.LARGE }}>
+        <Title inversed={false} level={isMobile ? 3 : 1} align={isMobile ? undefined : 'center'}>
+          First, adjust your desired rate of return.
+        </Title>
+      </Box>
+
+      <Box size={Size.LARGE} style={{ textAlign: isMobile ? undefined : 'center' }}>
         <Text>Over the next 10 years, year over year. Recommended: 10-30.</Text>
       </Box>
-      <Box size={{ top: Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
+      <Box size={{ top: isMobile ? Size.SMALL : Size.LARGE * 3 }} style={{ textAlign: 'center' }}>
         <div className={styles.gradientText}>
           <Text size={Size.EXTRA_LARGE * 2}>+{value}</Text>
           <Text size={Size.EXTRA_LARGE}>%</Text>
         </div>
       </Box>
-      <Box size={{ top: Size.LARGE * 3 }} style={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        size={{ top: isMobile ? Size.EXTRA_LARGE : Size.LARGE * 3 }}
+        style={{ display: 'flex', justifyContent: 'center' }}>
         <Slider value={value} onChange={onChange} onConfirm={onConfirm} />
       </Box>
       <div className={styles.chart}>
-        <AnimatedChart height={400} value={value} />
+        <AnimatedChart height={isMobile ? 220 : 400} value={value} />
       </div>
     </div>
   );
