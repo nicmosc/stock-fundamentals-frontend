@@ -10,7 +10,7 @@ import {
 } from 'framer-motion';
 import { ReactNode, useEffect } from 'react';
 
-import { Size, screenM } from '../utils';
+import { Size, screenL } from '../utils';
 
 const TOP_HEIGHT = 370;
 const MOBILE_TOP_HEIGHT = 430;
@@ -30,7 +30,7 @@ const styles = {
     top: 0;
     z-index: -1;
 
-    @media ${screenM} {
+    @media ${screenL} {
       height: ${MOBILE_TOP_HEIGHT}px;
     }
   `,
@@ -41,7 +41,7 @@ const styles = {
 };
 
 function _getTotalY() {
-  const isMobile = window.innerWidth <= 425;
+  const isMobile = window.innerWidth <= 768;
 
   return (isMobile ? MOBILE_TOP_HEIGHT : TOP_HEIGHT) + Size.LARGE;
 }

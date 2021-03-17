@@ -13,7 +13,7 @@ import {
   ValueOf,
   getSectorColors,
   round,
-  screenM,
+  screenL,
   useScreenSize,
 } from '../utils';
 import { Box } from './Box';
@@ -95,7 +95,7 @@ const styles = {
   table: css`
     padding-bottom: ${Size.EXTRA_LARGE * 3}px;
 
-    @media ${screenM} {
+    @media ${screenL} {
       padding-bottom: 0px;
     }
   `,
@@ -111,7 +111,7 @@ const styles = {
       border-radius: ${Size.EXTRA_SMALL}px;
     }
 
-    @media ${screenM} {
+    @media ${screenL} {
       width: calc(100% - ${Size.MEDIUM * 2}px);
     }
   `,
@@ -165,7 +165,7 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
     }, 500);
   };
 
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
   const rowHeight = isMobile ? 90 : 60;
 
   return (
@@ -288,12 +288,12 @@ export const Panel = ({ stocks, onClickStock, hidden, onChangeSort }: PanelProps
                               </Text>
                             </Col>
                           ) : null}
-                          <Col span={isMobile ? 6 : 4} style={{ textAlign: 'right' }}>
-                            <Text bold size={Size.LARGE}>
+                          <Col span={isMobile ? 8 : 4} style={{ textAlign: 'right' }}>
+                            <Text bold size={isMobile ? Size.LARGE - 3 : Size.LARGE}>
                               ${round(stock.stats.currentPrice)}
                             </Text>
                           </Col>
-                          <Col span={isMobile ? undefined : 2}>
+                          <Col span={isMobile ? 6 : 2}>
                             <Discount
                               amount={Math.round(
                                 (1 - stock.stats.currentPrice / stock.fairPrice) * 100,

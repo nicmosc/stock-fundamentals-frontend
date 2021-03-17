@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color, Size, screenM, useScreenSize } from '../../utils';
+import { Color, Size, screenL, useScreenSize } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
@@ -11,7 +11,7 @@ const styles = {
   margin: css`
     margin-top: -${Size.EXTRA_LARGE}px;
 
-    @media ${screenM} {
+    @media ${screenL} {
       margin-top: 0;
     }
   `,
@@ -55,7 +55,7 @@ interface MarginProps {
 
 export const Margin = ({ value, onChange, onConfirm }: MarginProps) => {
   const { screenSize, ScreenSizes } = useScreenSize();
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
   return (
     <div className={styles.margin}>
       <Box size={{ left: Size.LARGE, right: Size.LARGE }}>

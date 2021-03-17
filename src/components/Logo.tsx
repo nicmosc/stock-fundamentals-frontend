@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color, screenM } from '../utils';
+import { Color, screenL } from '../utils';
 
 const styles = {
   logo: css`
@@ -15,7 +15,7 @@ const styles = {
       width: calc(100% + 27px);
     }
 
-    @media ${screenM} {
+    @media ${screenL} {
       height: 50px;
       width: 50px;
 

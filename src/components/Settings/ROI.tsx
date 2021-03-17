@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 
-import { Color, Size, screenM, useScreenSize } from '../../utils';
+import { Color, Size, screenL, useScreenSize } from '../../utils';
 import { Box } from '../Box';
 import { Text } from '../Text';
 import { Title } from '../Title';
@@ -11,7 +11,7 @@ const styles = {
   roi: css`
     margin-top: -${Size.EXTRA_LARGE}px;
 
-    @media ${screenM} {
+    @media ${screenL} {
       margin-top: 0;
     }
   `,
@@ -60,7 +60,7 @@ interface ROIProps {
 
 export const ROI = ({ value, onChange, onConfirm }: ROIProps) => {
   const { screenSize, ScreenSizes } = useScreenSize();
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
   return (
     <div className={styles.roi}>
       <Box size={{ left: Size.LARGE, right: Size.LARGE }}>

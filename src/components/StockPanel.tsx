@@ -12,7 +12,7 @@ import {
   Size,
   getSectorColors,
   round,
-  screenM,
+  screenL,
   useScreenSize,
 } from '../utils';
 import { Box } from './Box';
@@ -32,7 +32,7 @@ const styles = {
     overflow: hidden;
     transform: translateZ(0);
 
-    @media ${screenM} {
+    @media ${screenL} {
       padding: ${Size.LARGE}px;
     }
   `,
@@ -57,7 +57,7 @@ const styles = {
     left: 50%;
     transform: translateX(-50%);
 
-    @media ${screenM} {
+    @media ${screenL} {
       bottom: ${Size.EXTRA_LARGE}px;
     }
   `,
@@ -134,7 +134,7 @@ const percentages = ['revenueGrowth', 'profitMargin', 'growthRate', 'FCFYield', 
 
 const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: VoidFunction }) => {
   const { screenSize, ScreenSizes } = useScreenSize();
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
 
   return (
     <div>
@@ -176,7 +176,7 @@ const Stats = ({ stats, onClickBack }: { stats: Stock['stats']; onClickBack: Voi
 
 const BasicInfo = ({ stock, onClickViewAll }: { stock: Stock; onClickViewAll: VoidFunction }) => {
   const { screenSize, ScreenSizes } = useScreenSize();
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
 
   return (
     <Fragment>

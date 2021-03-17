@@ -77,7 +77,7 @@ export const App = () => {
   const { screenSize, ScreenSizes } = useScreenSize();
 
   const safety = 1 - margin / 100;
-  const isMobile = screenSize <= ScreenSizes.M;
+  const isMobile = screenSize <= ScreenSizes.L;
 
   const computedStocks = isSettingsVisible ? [] : computeRankScores(roi / 100, safety, stocks);
   const sortedStocks = [...computedStocks].sort((a, b) => {
@@ -149,7 +149,11 @@ export const App = () => {
           <Box
             style={{ display: 'flex', flex: 1, minHeight: 0 }}
             inset
-            size={{ top: Size.SMALL, left: Size.MEDIUM, right: Size.MEDIUM }}>
+            size={{
+              top: isMobile ? Size.MEDIUM : Size.SMALL,
+              left: Size.MEDIUM,
+              right: Size.MEDIUM,
+            }}>
             <div className={styles.container}>
               <AnimatedScrollContainer
                 onResetPanel={() => setActiveStock(undefined)}
