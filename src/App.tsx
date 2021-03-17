@@ -16,6 +16,7 @@ import {
 import { SortByEnum } from './components/SortBy';
 import { Stock } from './types';
 import { Color, Size, ValueOf, computeRankScores, useFetchStocks } from './utils';
+import { useScreenSize } from './utils/hooks/use-screen-size';
 
 injectGlobal`
   html, body {
@@ -73,9 +74,11 @@ export const App = () => {
   const [roi, setRoi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
   const [sortBy, setSortBy] = useState<ValueOf<typeof SortByEnum>>(SortByEnum.ALPHABETICAL);
-  const [isSettingsVisible, setIsSettingsVisible] = useState(true);
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const { screenSize, ScreenSizes } = useScreenSize();
 
   const safety = 1 - margin / 100;
+  const isMobile = screenSize <= ScreenSizes.M;
 
   const computedStocks = isSettingsVisible ? [] : computeRankScores(roi / 100, safety, stocks);
   const sortedStocks = [...computedStocks].sort((a, b) => {
@@ -116,31 +119,33 @@ export const App = () => {
         />
       ) : (
         <Fragment>
-          <Box size={Size.LARGE}>
-            <Title level={1} align="center">
+          <Box size={isMobile ? { left: Size.LARGE, right: Size.LARGE } : Size.LARGE}>
+            <Title level={isMobile ? 2 : 1} align={isMobile ? undefined : 'center'}>
               Stocks at a discounted price for <span style={{ fontStyle: 'italic' }}>you</span>
             </Title>
-            <Title align="center" level={3}>
-              We found {sortedStocks.length} <span style={{ fontStyle: 'italic' }}>value</span>{' '}
-              stocks out of 11.244 that match your profile{' '}
-              <Tooltip
-                title="Only stocks with enough public financial data and solid fundamentals are considered. Growth rate > 0, profit margins > 0, revenue growth > 10%. Also, no penny stocks."
-                placement="right"
-                color={Color.white}
-                overlayInnerStyle={{
-                  color: Color.primary,
-                  padding: Size.MEDIUM,
-                  borderRadius: Size.SMALL,
-                }}>
-                <QuestionCircleFilled
-                  style={{
-                    fontSize: Size.MEDIUM,
-                    cursor: 'pointer',
-                    transform: 'translateY(-2px)',
-                  }}
-                />
-              </Tooltip>
-            </Title>
+            {!isMobile ? (
+              <Title align="center" level={3}>
+                We found {sortedStocks.length} <span style={{ fontStyle: 'italic' }}>value</span>{' '}
+                stocks out of 11.244 that match your profile{' '}
+                <Tooltip
+                  title="Only stocks with enough public financial data and solid fundamentals are considered. Growth rate > 0, profit margins > 0, revenue growth > 10%. Also, no penny stocks."
+                  placement="right"
+                  color={Color.white}
+                  overlayInnerStyle={{
+                    color: Color.primary,
+                    padding: Size.MEDIUM,
+                    borderRadius: Size.SMALL,
+                  }}>
+                  <QuestionCircleFilled
+                    style={{
+                      fontSize: Size.MEDIUM,
+                      cursor: 'pointer',
+                      transform: 'translateY(-2px)',
+                    }}
+                  />
+                </Tooltip>
+              </Title>
+            ) : null}
           </Box>
           <Box
             style={{ display: 'flex', flex: 1, minHeight: 0 }}
