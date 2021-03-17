@@ -73,7 +73,7 @@ export const App = () => {
   const [roi, setRoi] = useState<number>(20);
   const [activeStock, setActiveStock] = useState<Stock>();
   const [sortBy, setSortBy] = useState<ValueOf<typeof SortByEnum>>(SortByEnum.ALPHABETICAL);
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [isSettingsVisible, setIsSettingsVisible] = useState(true);
   const { screenSize, ScreenSizes } = useScreenSize();
 
   const safety = 1 - margin / 100;
