@@ -1,6 +1,6 @@
 import { LoadingOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { css, cx, injectGlobal } from '@emotion/css';
-import { Button, Col, Row, Spin, Tooltip } from 'antd';
+import { Button, Col, Popover, Row, Spin, Typography } from 'antd';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Fragment, useState } from 'react';
 
@@ -126,8 +126,23 @@ export const App = () => {
               <Title align="center" level={3}>
                 We found {sortedStocks.length} <span style={{ fontStyle: 'italic' }}>value</span>{' '}
                 stocks out of 11.244 that match your profile{' '}
-                <Tooltip
-                  title="Only stocks with enough public financial data and solid fundamentals are considered. Growth rate > 0, profit margins > 0, revenue growth > 10%. Also, no penny stocks."
+                <Popover
+                  content={
+                    <div style={{ maxWidth: 250 }}>
+                      {`Only stocks with enough public financial data and solid fundamentals are considered. Growth rate > 0, profit margins > 0, revenue growth > 10%. Also, no penny stocks.`}
+                      <br />
+                      <br />
+                      Click{' '}
+                      <Typography.Link
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        href="https://github.com/nicmosc/stock-fundamentals-frontend#how-are-stock-values-computed"
+                        style={{ fontWeight: 'bold' }}>
+                        here
+                      </Typography.Link>{' '}
+                      here to see how this list is generated.
+                    </div>
+                  }
                   placement="right"
                   color={Color.white}
                   overlayInnerStyle={{
@@ -142,7 +157,7 @@ export const App = () => {
                       transform: 'translateY(-2px)',
                     }}
                   />
-                </Tooltip>
+                </Popover>
               </Title>
             ) : null}
           </Box>
