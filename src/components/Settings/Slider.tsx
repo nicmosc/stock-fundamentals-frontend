@@ -144,11 +144,13 @@ export const Slider = ({ value, onChange, onConfirm, color = 'orange' }: SliderP
           style={{ width }}
         />
       </div>
-      <Box size={{ top: Size.LARGE }} style={{ textAlign: 'center' }}>
-        <Text light color={Color.tertiary}>
-          Click to confirm
-        </Text>
-      </Box>
+      <div style={{ cursor: 'pointer' }} onClick={canConfirm ? onConfirm : undefined}>
+        <Box size={{ top: Size.LARGE }} style={{ textAlign: 'center' }}>
+          <Text light color={Color.tertiary}>
+            Click to confirm
+          </Text>
+        </Box>
+      </div>
     </div>
   );
 };
